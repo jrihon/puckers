@@ -4,6 +4,10 @@
 /// Make a flag to allow the returned arrays to be printed in radians
 ///     like --rad , this program defaults with printing to degrees
 ///
+/// After the standard flag `peptide, fivering, sixring` add an interval value, which 
+///     should be parsed as a usize value
+///
+
 // Standard libs
 use std::env::args;
 
