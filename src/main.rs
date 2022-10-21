@@ -1,18 +1,21 @@
-/// Make a flag to allow the user to define range from -pi to pi || 0 to 2pi
-///     like --2pi to explicitly define this and default to the other one
+/// A program, written in the greatest language of all, to generate dihedral values
+/// in order to perform conformational sampling on : 
+///     peptide-like molecules (or any set of two torsion angles),
+///     five-membered furanose rings,
+///     six-membered pyranose rings.
 ///
-/// Make a flag to allow the returned arrays to be printed in radians
-///     like --rad , this program defaults with printing to degrees
 ///
-/// After the standard flag `peptide, fivering, sixring` add an interval value, which 
-///     should be parsed as a usize value
+/// License   : MIT License
+/// Author    : Jérôme Rihon
+/// Institute : Rega Institute for Medical Research, Katholieke Universiteit Leuven.
+///             Leuven 3000, Belgium.
 ///
-
+///
 // Standard libs
 use std::env::args;
 
 
-// Custom libs
+// Declare custom modules in main.rs
 mod arguments;
 mod peptide;
 

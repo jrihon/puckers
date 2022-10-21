@@ -5,7 +5,8 @@ pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
 
     // Only one argument allowed
     if cli_args.len() < 3 { 
-        panic!("Not enough arguments prompted!");
+        println!("Not enough arguments prompted!");
+        exit(1)
     }
 
     // Instantiate a Flags struct
@@ -27,8 +28,7 @@ pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
         if _arg == "--rad" { _flag.rad = true };
 
     }
-    // println!("{:?}", _flag);
-    // return the Flags struct with all the needed values
+    // return the Flags struct
     _flag
 }
 
