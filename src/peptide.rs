@@ -12,13 +12,13 @@ pub fn peptide(flags: &Flags) -> () {
         Dihedrals {
             start : 0.,
             end : 360.,
-            interval : flags.interval
+            num : flags.num
         }
     } else {
         Dihedrals {
             start : -180.,
             end : 180.,
-            interval : flags.interval
+            num : flags.num
             }
         }.generate_dihedrals(); // Consume the Dihedrals struct and return a 1D array
 
@@ -30,13 +30,13 @@ pub fn peptide(flags: &Flags) -> () {
 struct Dihedrals {
     start : f32,
     end : f32,
-    interval : usize
+    num : usize
 }
 
 // Implement a method of the Dihedrals struct
 impl Dihedrals {
     fn generate_dihedrals(&self) -> Array1<f32> {
-        Array1::linspace(self.start, self.end, self.interval)
+        Array1::linspace(self.start, self.end, self.num)
     }
 }
 
