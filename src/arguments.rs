@@ -3,6 +3,9 @@ use std::process::exit;
 
 pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
 
+    // If help is prompted
+    if &cli_args[1] == "-h" || &cli_args[1] == "--help" { print_help() }
+
     // Only one argument allowed
     if cli_args.len() < 3 { 
         println!("Not enough arguments prompted!");
@@ -74,5 +77,21 @@ fn interval_not_prompted_correctly() -> usize {
     println!("Prompted INTERVAL is not an integer value or was not prompted at all.");
     exit(1);
     0 // Hacky shit to make the matching arm not complain
+
+}
+
+fn print_help() {
+    println!(
+        "Torsions help menu :
+            --peptide INTERVAL : to generate torsion angles for peptide-like systems
+            --fivering INTERVAL : to generate torsion angles for five-membered ring systems
+            --sixring INTERVAL : to generate torsion angles for six-membered ring systems
+            \n
+            --twopi : to convert torsion angles from [-180,180] (default) to [0,360]
+            --rad : to convert torsion angles from degrees (default) to radians
+            \n
+            -h or --help to print this menu. "
+        );
+        exit(0)
 
 }
