@@ -6,11 +6,21 @@ use ndarray::prelude::*;
 use crate::arguments::Flags;
 
 pub fn peptide(flags: &Flags) -> () {
-    let torsions = Dihedrals {
-        start : -180.,
-        end : 180.,
-        interval : flags.interval
-    }.generate_dihedrals();
+    // let the variable torsions return as a set of dihedrals
+    // State at which range we want to generate the arrays
+    let torsions = if flags.twopi {
+        Dihedrals {
+            start : 0.,
+            end : 360.,
+            interval : flags.interval
+        }
+    } else {
+        Dihedrals {
+            start : -180.,
+            end : 180.,
+            interval : flags.interval
+            }
+        }.generate_dihedrals(); // Consume the Dihedrals struct and return a 1D array
 
     println!("{}", torsions)
 }
