@@ -1,13 +1,15 @@
 // External crate
 use ndarray::prelude::*;
 
+// This is how we import.
+// We start from our own crate and pass the absolute path to the `use` keyword
+use crate::arguments::Flags;
 
-
-pub fn peptide() -> () {
+pub fn peptide(flags: &Flags) -> () {
     let torsions = Dihedrals {
-        start : 0.,
-        end : 360.,
-        interval : 19
+        start : -180.,
+        end : 180.,
+        interval : flags.interval
     }.generate_dihedrals();
 
     println!("{}", torsions)

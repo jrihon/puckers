@@ -14,22 +14,25 @@ use std::env::args;
 
 // Custom libs
 mod arguments;
-mod peptipde;
+mod peptide;
 
+use arguments::return_cli_arguments;
 
 // MAIN
 fn main() {
 
     let mut _args: Vec<String> = args().collect();
 
-    match arguments::return_cli_arguments(&mut _args) {
-        "--peptide" =>  peptipde::peptide(),
-        "--fivering" =>  equidistant_globe(),
-        "--sixring" =>  equidistant_globe(),
+    let cli_arguments = return_cli_arguments(_args);
+    match cli_arguments.torsion_type.as_str() {
+        "--peptide" =>  peptide::peptide(&cli_arguments),
+        "--fivering" =>  fivering(),
+        "--sixring" =>  sixring(),
         _ => panic!("Flag Not Found")
     };
 }
 
 
 
-fn equidistant_globe() { println!("equidistant globe") }
+fn fivering() { println!("Zx and Zy") }
+fn sixring() { println!("equidistant globe") }
