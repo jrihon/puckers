@@ -18,13 +18,13 @@ pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
     // Loop over the `args` argument, which are cli_arguments
     for (i, _arg) in cli_args.iter().enumerate() {
         if _arg == "--peptide" { 
-            _flag.add_torsion_and_num_fields(&i, _arg, &cli_args)
+            _flag.add_torsion_and_num_fields(i, _arg, &cli_args)
         };
         if _arg == "--fivering" { 
-            _flag.add_torsion_and_num_fields(&i, _arg, &cli_args)
+            _flag.add_torsion_and_num_fields(i, _arg, &cli_args)
         };
         if _arg == "--sixring" { 
-            _flag.add_torsion_and_num_fields(&i, _arg, &cli_args)
+            _flag.add_torsion_and_num_fields(i, _arg, &cli_args)
         };
 
         if _arg == "--twopi" { _flag.twopi = true };
@@ -41,7 +41,7 @@ pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
 pub struct Flags {
     pub torsion_type : String,
     pub rad : bool,
-    pub num : usize,
+    pub num : u32,
     pub twopi : bool 
 }
 
@@ -57,12 +57,12 @@ impl Flags {
     
     }
 
-    fn add_torsion_and_num_fields(&mut self, idx : &usize, _arg : &String, args : &Vec<String>) {
+    fn add_torsion_and_num_fields(&mut self, idx : usize, _arg : &String, args : &Vec<String>) {
         // take ownership of the argument value and take it
         self.torsion_type = _arg.to_owned();
 
         // Retrieve the next value in the Vec<> and check if it is parsable as a `usize`
-        self.num = match args[idx + 1].parse::<usize>() {
+        self.num = match args[idx + 1].parse::<u32>() {
             Ok(integer) => integer,
             Err(_) => num_not_prompted_correctly()
         }
@@ -73,7 +73,7 @@ impl Flags {
 
 
 #[allow(unreachable_code)]
-fn num_not_prompted_correctly() -> usize {
+fn num_not_prompted_correctly() -> u32 {
     println!("Prompted NUM is not an integer value or was not prompted at all.");
     exit(1);
     0 // Hacky shit to make the matching arm not complain

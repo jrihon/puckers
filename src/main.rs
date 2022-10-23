@@ -13,29 +13,56 @@
 ///
 // Standard libs
 use std::env::args;
+use ndarray::Array1;
 
 
 // Declare custom modules in main.rs
 mod arguments;
 mod peptide;
+mod fivering;
 
 use arguments::return_cli_arguments;
 
 // MAIN
 fn main() {
 
-    let mut _args: Vec<String> = args().collect();
+    let mut _args: Vec<String> = args().collect(); // collect passed arguments from CLI
 
-    let cli_arguments = return_cli_arguments(_args);
-    match cli_arguments.torsion_type.as_str() {
+    let cli_arguments = return_cli_arguments(_args); // return CLI arguments in a convenient Struct
+
+    // Match the type of torsion angles needed to generate and then output them
+    let _torsions = match cli_arguments.torsion_type.as_str() {
         "--peptide" =>  peptide::peptide(&cli_arguments),
-        "--fivering" =>  fivering(),
-        "--sixring" =>  sixring(),
+        "--fivering" =>  fivering::fivering(&cli_arguments),
+//        "--sixring" =>  sixring(),
         _ => panic!("Flag Not Found")
     };
+
+    // Print resulting arrays
+//    torsions.print_arrays();
 }
 
 
 
-fn fivering() { println!("Zx and Zy") }
-fn sixring() { println!("equidistant globe") }
+//fn sixring() { println!("equidistant globe") }
+
+
+// struct that contains the required torsion angles, be it for any type of system,
+// and writes it out to a file
+pub struct Torsions {
+    pub array1 : Array1<f64>,
+    pub array2 : Array1<f64>
+}
+
+impl Torsions {
+    #[allow(dead_code)]
+    fn print_arrays(&self) {
+        let _sizeof : usize = self.array1.len(); // define size of array
+
+        // print both arrays
+        for i in 0.._sizeof {
+            println!("{:?}", (self.array1[i], self.array2[i]))
+
+        };
+    }
+}
