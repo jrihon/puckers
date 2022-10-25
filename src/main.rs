@@ -20,6 +20,7 @@ use ndarray::Array1;
 mod arguments;
 mod peptide;
 mod fivering;
+mod sixring;
 
 use arguments::return_cli_arguments;
 
@@ -31,15 +32,15 @@ fn main() {
     let cli_arguments = return_cli_arguments(_args); // return CLI arguments in a convenient Struct
 
     // Match the type of torsion angles needed to generate and then output them
-    let _torsions = match cli_arguments.torsion_type.as_str() {
+    let torsions = match cli_arguments.torsion_type.as_str() {
         "--peptide" =>  peptide::peptide(&cli_arguments),
         "--fivering" =>  fivering::fivering(&cli_arguments),
-//        "--sixring" =>  sixring(),
+        "--sixring" =>  sixring:: sixring(),
         _ => panic!("Flag Not Found")
     };
 
     // Print resulting arrays
-//    torsions.print_arrays();
+    torsions.print_arrays();
 }
 
 
@@ -55,7 +56,6 @@ pub struct Torsions {
 }
 
 impl Torsions {
-    #[allow(dead_code)]
     fn print_arrays(&self) {
         let _sizeof : usize = self.array1.len(); // define size of array
 
