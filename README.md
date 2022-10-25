@@ -51,8 +51,8 @@ $ cargo build --release
 $ sudo cp path/to/torsions/target/release/torsions /usr/bin/torsions 
 
 # Method 2 : Add PATH to ~/.bashrc
-$ export PATH="$PATH:path/to/torsions/target/release/torsions"
+export PATH="$PATH:path/to/torsions/target/release/torsions"
 
 # Method 3 : alias the binary. Probably the safest option
-$ alias torsions="path/to/torsions/target/release/torsions"
+alias torsions="path/to/torsions/target/release/torsions"
 ```
