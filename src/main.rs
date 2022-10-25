@@ -44,10 +44,6 @@ fn main() {
 }
 
 
-
-//fn sixring() { println!("equidistant globe") }
-
-
 // struct that contains the required torsion angles, be it for any type of system,
 // and writes it out to a file
 pub struct Torsions {
