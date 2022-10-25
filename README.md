@@ -45,11 +45,14 @@ $ torsions --sixring 630
 $ cd path/to/torsions
 $ cargo build --release
 
-# There are two ways to do it.
+# There are three ways to do it.
 
 # Method 1 : To put it directly in the path (recommended)
 $ sudo cp path/to/torsions/target/release/torsions /usr/bin/torsions 
 
 # Method 2 : Add PATH to ~/.bashrc
 $ export PATH="$PATH:path/to/torsions/target/release/torsions"
+
+# Method 3 : alias the binary. Probably the safest option
+$ alias torsions="path/to/torsions/target/release/torsions"
 ```
