@@ -1,4 +1,4 @@
-#![allow(dead_code, unused_imports)] // temporarily remove all annoying warnings
+#![allow(dead_code)] // temporarily remove all annoying warnings
 
 // import module(sixring) specific modules
 mod equidistance_globe;
@@ -13,7 +13,8 @@ pub fn sixring(flags : &Flags) -> Torsions {
 //    println!("sixring module");
     let globe = equidistance_globe(flags.num);
 
-    print_globe_cartesians(globe);
+//    print_globe_cartesians(globe);
+    print_globe_sphericals(globe);
 
 
     let t = Torsions {
@@ -28,7 +29,23 @@ pub fn sixring(flags : &Flags) -> Torsions {
 
 
 fn print_globe_cartesians(globe : GlobeCoordinates) {
+    //
     let _sizeof = globe.x.len();
 
     for i in 0.._sizeof { println!("{:?}", (globe.x[i], globe.y[i], globe.z[i])) }
+}
+
+
+fn print_globe_sphericals(globe : GlobeCoordinates) {
+    //
+    let _sizeof = globe.phi.len();
+    let mut idx_theta: usize = 0;
+
+    for i in 0.._sizeof { // every new circle, we start off at phi == 0.0 rad
+        if (globe.phi[i] == 0.0) && !(i == 0) {
+            idx_theta = idx_theta + 1 
+        };
+
+        println!("{:?}", (globe.rho, globe.theta[idx_theta], globe.phi[i])) 
+    }
 }
