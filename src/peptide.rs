@@ -37,10 +37,7 @@ fn generate_x_and_y_axis(num : u32, r1 : Array1<f64>, r2 : Array1<f64>) -> Torsi
     let _sizeof : u32 = num * num;
     let num_f64 : f64 = num as f64;
     
-    let mut t = Torsions {
-        array1 : Array1::<f64>::zeros(_sizeof as usize),  // The Array1 struct already indicates that we can only pass in a Dim == 1
-        array2 : Array1::<f64>::zeros(_sizeof as usize)
-    };
+    let mut t = Torsions::new(_sizeof as usize);
 
     let mut x : f64;
     let mut y : f64;

@@ -35,7 +35,7 @@ fn main() {
     let torsions = match cli_arguments.torsion_type.as_str() {
         "--peptide" =>  peptide::peptide(&cli_arguments),
         "--fivering" =>  fivering::fivering(&cli_arguments),
-        "--sixring" =>  sixring:: sixring(),
+        "--sixring" =>  sixring:: sixring(&cli_arguments),
         _ => panic!("Flag Not Found")
     };
 
@@ -52,6 +52,14 @@ pub struct Torsions {
 }
 
 impl Torsions {
+    fn new(num : usize) -> Torsions {
+        Torsions {
+           array1 : Array1::<f64>::zeros(num),
+           array2 : Array1::<f64>::zeros(num),
+    }
+        
+    }
+    #[allow(dead_code)]
     fn print_arrays(&self) {
         let _sizeof : usize = self.array1.len(); // define size of array
 

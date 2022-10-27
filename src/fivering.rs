@@ -31,11 +31,7 @@ fn generate_nu1_and_nu3(num : u32, axis_x: Array1<f64>, axis_y: Array1<f64>) -> 
     let denominator_y : f64 = 2. * FOURPIOVERFIVE.sin();
 
     // Initialise Torsions struct
-    let mut t = Torsions {
-        array1 : Array1::<f64>::zeros(_sizeof as usize),
-        array2 : Array1::<f64>::zeros(_sizeof as usize),
-    };
-
+    let mut t = Torsions::new(_sizeof as usize);
 
     let mut x : f64;
     let mut y : f64;
