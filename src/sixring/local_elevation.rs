@@ -1,24 +1,38 @@
-#![allow(unused_mut)]
+///  Derive the local elevation of all the puckering modes and every mode's atomic elevation
 ///
-/// Derive the local elevation of all the puckering modes and every mode's atomic elevation
+///  " General definition of ring puckering coordinates, Cremer, DT and Pople, JA "
+///  Journal of the American Chemical Society. doi.org/10.1021/ja00839a011
 ///
+/// 1.        [                 term 1                         ]   [          term 2              ]
+///     z_j = sqrt(2/N) * q_m * cos[phi_m + (2pi * m * (j-1))/N] + 1/sqrt(6) * q_(m+1) * (-1)^(j-1)
 ///
+/// 2. For N = 6 and m = 2
+///     z_j = sqrt(1/3) * q_2 * cos[phi_2 + (2pi * (j-1))/3] + 1/sqrt(6) * q_3 * (-1)^(j-1)
 ///
+/// 3. Convert the puckering parameters to spherical coordinates
+///     q_2 = Q * sin(theta)
+///     q_3 = Q * cos(theta)
+///     phi_2 = phi
+///             [                  term 1                         ]   [             term 2                ]
+///     z_j = [ sqrt(1/3) * sin(theta) * cos[phi + (2pi * (j-1))/3] + 1/sqrt(6) * cos(theta) * (-1)^(j-1) ] * Q   (=> fn calculate_local_elevation(...))
 ///
+///   3.1 Where, for i = 1..6 : 
+///     constant1 = (2pi * (j-1))/3   --> Vec<f64, 6>
+///     constant2 = (-1)^(j-1)        --> Vec<f64, 6>
 ///
-///
-///
+///   3.2 and the following are constant too : 
+///     sqrt_one_over_three = sqrt(1/3)
+///     one_over_sqrt_six   = 1 / sqrt(6)
 ///
 ///
 
 // imports
 use ndarray::{Array,Array2, Ix2};
 use crate::sixring::equidistance_globe::GlobeCoordinates;
-use std::f64::consts::PI;
+use crate::sixring::equidistance_globe::TWOPI as TWOPI;
 
 // CONSTANTS
 const Z_SIZE: usize = 6;
-const TWOPI: f64 = 2. * PI;
 
 pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
 
@@ -29,11 +43,12 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
     let mut z: Array<f64, Ix2> = Array2::zeros((globe_size, Z_SIZE));
 
     // Set two constant values
-    let sqrt_one_over_three: f64 = (1_f64/3_f64).sqrt() ;
-    let one_over_sqrt_six: f64 = 1_f64/6_f64.sqrt() ;
-
     let constant1: Vec<f64> = constant_from_term1();
     let constant2: Vec<f64> = constant_from_term2();
+
+    // Set some more constant values
+    let sqrt_one_over_three: f64 = (1_f64/3_f64).sqrt() ;
+    let one_over_sqrt_six: f64 = 1_f64/6_f64.sqrt() ;
 
     let mut idx_theta: usize = 0;
     for i in 0..globe_size { 

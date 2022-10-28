@@ -23,8 +23,10 @@ Torsions help menu :
 ```
 
 #### Torsion angles
-The flags `--peptide`, `--fivering` and `--sixring` are to be used with an `NUM` (integer value), indicated a range with `NUM` amount of evenly spaced values.</br>
-Exactly how the `linspace()` function is used in all math libraries.
+The flags `--peptide`, `--fivering` and `--sixring` are to be used with an `NUM` (integer value).</br>
+ - `--peptide` `NUM` indicates the amount of evenly spaced values, with `NUM^2` being the amount of conformations to be sampled for
+ - `--fivering` `NUM` indicates the amount of evenly spaced values, with `NUM^2` being the amount of conformations to be sampled for
+ - `--sixring` `NUM` indicates the (near) amount of conformations to be sampled for
 </br>
 </br>
 The flag `--twopi` is used to change the range of possible torsion angles from [-π, π] to [0, 2π].</br>
@@ -43,16 +45,5 @@ $ torsions --sixring 630
 ### Installation
 ```shell
 $ cd path/to/torsions
-$ cargo build --release
-
-# There are three ways to do it.
-
-# Method 1 : To put it directly in the path (recommended)
-$ sudo cp path/to/torsions/target/release/torsions /usr/bin/torsions 
-
-# Method 2 : Add PATH to ~/.bashrc
-export PATH="$PATH:path/to/torsions/target/release/torsions"
-
-# Method 3 : alias the binary in your ~/.bashrc . Probably the safest option
-alias torsions="path/to/torsions/target/release/torsions"
+$ cd cargo install --path .
 ```

@@ -25,7 +25,7 @@ use std::f64::consts::PI;
 use ndarray::Array1;
 
 const RHO : f64 = 0.67; // radius of the sphere; constant
-const TWOPI : f64 = 2. * PI; // two pi; constant
+pub const TWOPI : f64 = 2. * PI; // two pi; constant
 
 pub fn equidistance_globe(num : u32 ) -> GlobeCoordinates {
     // Set a value as surface area / points
