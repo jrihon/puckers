@@ -65,20 +65,17 @@ pub fn equidistance_globe(num : u32 ) -> GlobeCoordinates {
 
 
 fn corrected_num_amount_to_size_up_arrays(m_theta : f64, d_phi : f64) -> usize {
-    
     // Counting the amount of points that are actually generated
     let mut size_array: u32 = 0;
 
     for m in 0..m_theta as u32 {
         let theta: f64 = (PI * (m as f64 + 0.5)) / m_theta;
         let m_phi : f64 = (TWOPI * theta.sin() / d_phi).round();
+        size_array = size_array + m_phi as u32;
 
-        for _n in 0..m_phi as u32 {
-            size_array = size_array + 1;
-        };
     };
-//    println!("{size_array}");
-    size_array as usize
+
+    size_array as usize // return exact amount of points that will have been generated
 }
 
 fn corrected_amount_of_points(num : f64) -> f64 {
