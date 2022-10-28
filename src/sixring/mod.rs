@@ -1,7 +1,8 @@
-#![allow(dead_code)] // temporarily remove all annoying warnings
+#![allow(dead_code, unused_variables)] // temporarily remove all annoying warnings
 
 // import module(sixring) specific modules
 mod equidistance_globe;
+mod local_elevation;
 use crate::sixring::equidistance_globe::{GlobeCoordinates, equidistance_globe};
 
 
@@ -14,7 +15,7 @@ pub fn sixring(flags : &Flags) -> Torsions {
     let globe = equidistance_globe(flags.num);
 
 //    print_globe_cartesians(globe);
-    print_globe_sphericals(globe);
+//    print_globe_sphericals(globe);
 
 
     let t = Torsions {
