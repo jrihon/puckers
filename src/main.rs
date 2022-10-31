@@ -22,21 +22,21 @@ mod peptide;
 mod fivering;
 mod sixring;
 
-use arguments::return_cli_arguments;
+use arguments::{return_cli_arguments, TorsionType};
 
 // MAIN
 fn main() {
 
-    let mut _args: Vec<String> = args().collect(); // collect passed arguments from CLI
+    let args: Vec<String> = args().collect(); // collect passed arguments from CLI
 
-    let cli_arguments = return_cli_arguments(_args); // return CLI arguments in a convenient Struct
+    let cli_arguments = return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
     // Match the type of torsion angles needed to generate and then output them
-    let torsions = match cli_arguments.torsion_type.as_str() {
-        "--peptide" =>  peptide::peptide(&cli_arguments),
-        "--fivering" =>  fivering::fivering(&cli_arguments),
-        "--sixring" =>  sixring:: sixring(&cli_arguments),
-        _ => panic!("Flag Not Found")
+    let torsions = match cli_arguments.torsion_type {
+        TorsionType::Peptide =>  peptide::peptide(&cli_arguments),
+        TorsionType::Fivering =>  fivering::fivering(&cli_arguments),
+        TorsionType::Sixring =>  sixring:: sixring(&cli_arguments),
+        TorsionType::Nothing => panic!("Flag Not Found")
     };
 
     // Print resulting arrays
