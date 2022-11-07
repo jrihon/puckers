@@ -56,7 +56,7 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
         // every new circle, we start off again at phi == 0.0
         // if we move to a new layer; we have to the next theta value
         // NB :the theta and phi arrays are not of the same length
-        if (globe.phi[i] == 0.0) && !(i == 0) { idx_theta = idx_theta + 1 };
+        if (globe.phi[i] == 0.0) && !(i == 0) { idx_theta += 1 };
 
         for j in 1..=6 {
             z[[i, j]] = calculate_local_elevation(globe.rho, globe.theta[idx_theta], globe.phi[i], &constant1, &constant2, j,
@@ -80,23 +80,52 @@ fn calculate_local_elevation(rho : f64, theta: f64, phi: f64, c1 : &Vec<f64>,  c
 
 
 fn constant_from_term1() -> Vec<f64> {
-    let mut constant1: Vec<f64> = Vec::with_capacity(Z_SIZE);
 
-    for j in 1..=6  {
-        constant1[j - 1] = (TWOPI * (j as f64 - 1.)) / 3.
-    }
-    
-    constant1 // return constant value in term 1
+    vec![1.,2.,3.,4.,5.,6.].iter()
+                           .map(|j| TWOPI * ((j - 1.) / 3.))
+                           .collect::<Vec<f64>>()
 }
 
 
 fn constant_from_term2() -> Vec<f64> {
-    let mut constant2: Vec<f64> = Vec::with_capacity(Z_SIZE);
-    
-    for j in 1..=6  {
-        constant2[j - 1] = -1_f64.powf(j as f64 - 1.)
-    }
 
-    constant2 // return constant value in term 2
+    vec![1.,2.,3.,4.,5.,6.].into_iter()
+                           .map(|j| -1_f64.powf(j - 1.))
+                           .collect::<Vec<f64>>()
 }
 
+#[test]
+fn test_iterating_over_array1() {
+
+    // Rust method
+    let vec1: Vec<f64> = vec![1.,2.,3.,4.,5.,6.].iter()
+                           .map(|j| TWOPI * ((j - 1.) / 3.))
+                           .collect::<Vec<f64>>();
+
+    // Manual method
+    let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
+
+    for j in 1..=6  {
+        vec2.push((TWOPI * (j as f64 - 1.)) / 3.)
+    };
+    
+    assert_eq!(vec1, vec2)
+}
+
+#[test]
+fn test_iterating_over_array2() {
+
+    // Rust method
+
+    let vec1 = vec![1.,2.,3.,4.,5.,6.].into_iter()
+                           .map(|j| -1_f64.powf(j - 1.))
+                           .collect::<Vec<f64>>();
+                           
+    let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
+    for j in 1..=6  {
+        vec2.push(-1_f64.powf(j as f64 - 1.))
+    }
+
+
+    assert_eq!(vec1, vec2)
+}

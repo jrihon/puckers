@@ -55,7 +55,7 @@ pub fn equidistance_globe(num : u32 ) -> GlobeCoordinates {
         for n in 0..m_phi as u32 {
             globe.phi[idx as usize] = (TWOPI * n as f64) / m_phi;
             globe.polar_to_cartesian(idx as usize, m as usize);
-            idx = idx + 1;
+            idx += 1;
             
         }
     }
@@ -71,7 +71,7 @@ fn corrected_num_amount_to_size_up_arrays(m_theta : f64, d_phi : f64) -> usize {
     for m in 0..m_theta as u32 {
         let theta: f64 = (PI * (m as f64 + 0.5)) / m_theta;
         let m_phi : f64 = (TWOPI * theta.sin() / d_phi).round();
-        size_array = size_array + m_phi as u32;
+        size_array += m_phi as u32;
 
     };
 
