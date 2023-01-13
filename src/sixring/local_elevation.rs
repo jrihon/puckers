@@ -9,7 +9,7 @@
 /// 2. For N = 6 and m = 2
 ///     z_j = sqrt(1/3) * q_2 * cos[phi_2 + (2pi * (j-1))/3] + 1/sqrt(6) * q_3 * (-1)^(j-1)
 ///
-/// 3. Convert the puckering parameters to spherical coordinates
+/// 3. Convert the puckering parameters to local elevation
 ///     q_2 = Q * sin(theta)
 ///     q_3 = Q * cos(theta)
 ///     phi_2 = phi
@@ -27,20 +27,21 @@
 ///
 
 // imports
-use ndarray::{Array,Array2, Ix2};
+use ndarray::Array2;
 use crate::sixring::equidistance_globe::GlobeCoordinates;
 use crate::sixring::equidistance_globe::TWOPI as TWOPI;
 
 // CONSTANTS
 const Z_SIZE: usize = 6;
 
+#[allow(unused_assignments)]
 pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
 
     // Instance several variables
     let globe_size: usize = globe.phi.len();
 
     // 6 atomic elevations (Z_j) for any set of (r, theta, phi)
-    let mut z: Array<f64, Ix2> = Array2::zeros((globe_size, Z_SIZE));
+    let mut z: Array2<f64> = Array2::zeros((globe_size, Z_SIZE));
 
     // Set two constant values
     let constant1: Vec<f64> = constant_from_term1();
@@ -51,6 +52,7 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
     let one_over_sqrt_six: f64 = 1_f64/6_f64.sqrt() ;
 
     let mut idx_theta: usize = 0;
+    let mut jprime: usize = 0;
     for i in 0..globe_size { 
         // the way we generate the globe is in layered circles.
         // every new circle, we start off again at phi == 0.0
@@ -58,8 +60,9 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
         // NB :the theta and phi arrays are not of the same length
         if (globe.phi[i] == 0.0) && !(i == 0) { idx_theta += 1 };
 
-        for j in 1..=6 {
-            z[[i, j]] = calculate_local_elevation(globe.rho, globe.theta[idx_theta], globe.phi[i], &constant1, &constant2, j,
+        for j in 1..=Z_SIZE {
+            jprime = j - 1;
+            z[[i, jprime]] = calculate_local_elevation(globe.rho, globe.theta[idx_theta], globe.phi[i], &constant1[jprime], &constant2[jprime],
                                                   sqrt_one_over_three, one_over_sqrt_six)
         }
     }
@@ -69,11 +72,11 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
 }
 
 
-fn calculate_local_elevation(rho : f64, theta: f64, phi: f64, c1 : &Vec<f64>,  c2 : &Vec<f64>, j: usize,
+fn calculate_local_elevation(rho : f64, theta: f64, phi: f64, c1 : &f64,  c2 : &f64,
                              onethree: f64, onesix: f64) -> f64 {
     
-    let term1 = onethree * theta.sin() * (phi + c1[j]).cos(); // first term of the equation
-    let term2 = onesix * theta.cos() * c2[j]; // second term of the equation
+    let term1 = onethree * theta.sin() * (phi + c1).cos(); // first term of the equation
+    let term2 = onesix * theta.cos() * c2; // second term of the equation
 
     (term1 + term2) * rho // multiply by rho, which was pushed out by both terms to the outside of the equation
 }

@@ -7,7 +7,7 @@ use crate::Torsions;
 
 
 
-pub fn fivering(flags : &Flags) -> Torsions {
+pub fn fivering(flags : Flags) -> Torsions {
     
     let axis_x : Array1<f64> = Array1::linspace(-60., 60., flags.num as usize);
     let axis_y = axis_x.clone();

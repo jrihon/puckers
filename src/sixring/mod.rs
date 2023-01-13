@@ -3,6 +3,7 @@
 // import module(sixring) specific modules
 mod equidistance_globe;
 mod local_elevation;
+mod ring_partition;
 use crate::sixring::equidistance_globe::{GlobeCoordinates, equidistance_globe};
 
 
@@ -10,9 +11,13 @@ use ndarray::prelude::*;
 use crate::arguments::Flags;
 use crate::Torsions;
 
-pub fn sixring(flags : &Flags) -> Torsions {
+use self::ring_partition::RingPartition;
+
+pub fn sixring(flags : Flags) -> Torsions {
 //    println!("sixring module");
     let globe = equidistance_globe(flags.num);
+
+    let ringpartition = local_elevation::cremerpople_evelation(&globe).ring_partition();
 
 //    print_globe_cartesians(globe);
 //    print_globe_sphericals(globe);

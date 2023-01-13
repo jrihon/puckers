@@ -22,21 +22,29 @@ mod peptide;
 mod fivering;
 mod sixring;
 
-use arguments::{return_cli_arguments, TorsionType};
+use crate::arguments::{return_cli_arguments, TorsionType};
 
 // MAIN
 fn main() {
 
     let args: Vec<String> = args().collect(); // collect passed arguments from CLI
 
+    // We can actually use the clap crate, but I wanted to do it manually to get a feel for Rust
     let cli_arguments = return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
     // Match the type of torsion angles needed to generate and then output them
-    let torsions = match cli_arguments.torsion_type {
-        TorsionType::Peptide =>  peptide::peptide(&cli_arguments),
-        TorsionType::Fivering =>  fivering::fivering(&cli_arguments),
-        TorsionType::Sixring =>  sixring:: sixring(&cli_arguments),
-        TorsionType::Nothing => panic!("Flag Not Found")
+    //
+    // match against a reference
+    // if we match against the value, we move the value out of the torsion_type field in the struct
+    // and then we lose it and get a partial move (where one of the field's values has been moved
+    // in a struct)
+    let torsions = match &cli_arguments.torsion_type {
+        Some(a) => match a {
+            TorsionType::Peptide =>  peptide::peptide(cli_arguments),
+            TorsionType::Fivering =>  fivering::fivering(cli_arguments),
+            TorsionType::Sixring =>  sixring:: sixring(cli_arguments),
+        },
+        None => panic!("Flag Not Found")
     };
 
     // Print resulting arrays
@@ -59,12 +67,11 @@ impl Torsions {
     }
         
     }
-    #[allow(dead_code)]
     fn print_arrays(&self) {
-        let _sizeof : usize = self.array1.len(); // define size of array
+        let size : usize = self.array1.len(); // define size of array
 
         // print both arrays
-        for i in 0.._sizeof {
+        for i in 0..size {
             println!("{:?}", (self.array1[i], self.array2[i]))
 
         };

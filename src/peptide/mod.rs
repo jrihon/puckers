@@ -7,7 +7,7 @@ use std::clone::Clone;
 use crate::arguments::Flags;
 use crate::Torsions;
 
-pub fn peptide(flags: &Flags) -> Torsions {
+pub fn peptide(flags: Flags) -> Torsions {
     // let the variable torsions return as a set of dihedrals
     // State at which range we want to generate the arrays
     let range1 = if flags.twopi {
