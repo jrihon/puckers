@@ -26,10 +26,7 @@ pub fn peptide(flags: Flags) -> Torsions {
                                 
     let range2 = range1.clone(); // Clone the range for the Y axis
 
-    // Return the generated torsion angles in a struct
-    let t = generate_x_and_y_axis(flags.num, range1, range2);
-
-    t // return statement
+    generate_x_and_y_axis(flags.num, range1, range2) // returned value
 }
 
 fn generate_x_and_y_axis(num : u32, r1 : Array1<f64>, r2 : Array1<f64>) -> Torsions {

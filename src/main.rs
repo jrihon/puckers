@@ -38,6 +38,7 @@ fn main() {
     // if we match against the value, we move the value out of the torsion_type field in the struct
     // and then we lose it and get a partial move (where one of the field's values has been moved
     // in a struct)
+    // That is why we match against a reference to the value
     let torsions = match &cli_arguments.torsion_type {
         Some(a) => match a {
             TorsionType::Peptide =>  peptide::peptide(cli_arguments),

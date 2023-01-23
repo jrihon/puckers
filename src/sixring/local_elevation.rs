@@ -32,7 +32,7 @@ use crate::sixring::equidistance_globe::GlobeCoordinates;
 use crate::sixring::equidistance_globe::TWOPI as TWOPI;
 
 // CONSTANTS
-const Z_SIZE: usize = 6;
+pub const Z_SIZE: usize = 6;
 
 #[allow(unused_assignments)]
 pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
@@ -52,17 +52,15 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
     let one_over_sqrt_six: f64 = 1_f64/6_f64.sqrt() ;
 
     let mut idx_theta: usize = 0;
-    let mut jprime: usize = 0;
     for i in 0..globe_size { 
         // the way we generate the globe is in layered circles.
         // every new circle, we start off again at phi == 0.0
         // if we move to a new layer; we have to the next theta value
-        // NB :the theta and phi arrays are not of the same length
-        if (globe.phi[i] == 0.0) && !(i == 0) { idx_theta += 1 };
+        // NOTE :the theta and phi arrays are not of the same length
+        if (globe.phi[i] == 0.0) && i != 0 { idx_theta += 1 };
 
-        for j in 1..=Z_SIZE {
-            jprime = j - 1;
-            z[[i, jprime]] = calculate_local_elevation(globe.rho, globe.theta[idx_theta], globe.phi[i], &constant1[jprime], &constant2[jprime],
+        for j in 0..Z_SIZE {
+            z[[i, j]] = calculate_local_elevation(globe.rho, globe.theta[idx_theta], globe.phi[i], &constant1[j], &constant2[j],
                                                   sqrt_one_over_three, one_over_sqrt_six)
         }
     }
@@ -93,42 +91,48 @@ fn constant_from_term1() -> Vec<f64> {
 fn constant_from_term2() -> Vec<f64> {
 
     vec![1.,2.,3.,4.,5.,6.].into_iter()
-                           .map(|j| -1_f64.powf(j - 1.))
+                           .map(|j| -(1_f64.powf(j - 1.)))
                            .collect::<Vec<f64>>()
 }
 
-#[test]
-fn test_iterating_over_array1() {
+#[cfg(test)]
+mod test {
 
-    // Rust method
-    let vec1: Vec<f64> = vec![1.,2.,3.,4.,5.,6.].iter()
-                           .map(|j| TWOPI * ((j - 1.) / 3.))
-                           .collect::<Vec<f64>>();
+    use super::*;
 
-    // Manual method
-    let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
+    #[test]
+    fn test_iterating_over_array1() {
 
-    for j in 1..=6  {
-        vec2.push((TWOPI * (j as f64 - 1.)) / 3.)
-    };
-    
-    assert_eq!(vec1, vec2)
-}
+        // Rust method
+        let vec1: Vec<f64> = vec![1.,2.,3.,4.,5.,6.].iter()
+                               .map(|j| TWOPI * ((j - 1.) / 3.))
+                               .collect::<Vec<f64>>();
 
-#[test]
-fn test_iterating_over_array2() {
+        // Manual method
+        let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
 
-    // Rust method
-
-    let vec1 = vec![1.,2.,3.,4.,5.,6.].into_iter()
-                           .map(|j| -1_f64.powf(j - 1.))
-                           .collect::<Vec<f64>>();
-                           
-    let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
-    for j in 1..=6  {
-        vec2.push(-1_f64.powf(j as f64 - 1.))
+        for j in 1..=6  {
+            vec2.push((TWOPI * (j as f64 - 1.)) / 3.)
+        };
+        
+        assert_eq!(vec1, vec2)
     }
 
+    #[test]
+    fn test_iterating_over_array2() {
 
-    assert_eq!(vec1, vec2)
+        // Rust method
+        let vec1 = vec![1.,2.,3.,4.,5.,6.].into_iter()
+                               .map(|j| -1_f64.powf(j - 1.))
+                               .collect::<Vec<f64>>();
+                               
+        // Manual method
+        let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
+        for j in 1..=6  {
+            vec2.push(-1_f64.powf(j as f64 - 1.))
+        }
+
+
+        assert_eq!(vec1, vec2)
+    }
 }

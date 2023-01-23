@@ -12,9 +12,7 @@ pub fn fivering(flags : Flags) -> Torsions {
     let axis_x : Array1<f64> = Array1::linspace(-60., 60., flags.num as usize);
     let axis_y = axis_x.clone();
 
-    let t = generate_nu1_and_nu3(flags.num, axis_x, axis_y);
-
-    t // return Torsions struct
+    generate_nu1_and_nu3(flags.num, axis_x, axis_y) // returned value
 }
 
 

@@ -4,6 +4,9 @@ use std::process::exit;
 pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
 
     // If help is prompted
+    if cli_args.len() == 1 { print_help() };
+
+    // If help is prompted
     if &cli_args[1] == "-h" || &cli_args[1] == "--help" { print_help() };
 
     // Only one argument allowed
@@ -64,7 +67,7 @@ impl Flags {
     
     }
 
-    fn add_torsion_and_num_fields(&mut self, idx : usize, torsion : Option<TorsionType>, args : &Vec<String>) {
+    fn add_torsion_and_num_fields(&mut self, idx : usize, torsion : Option<TorsionType>, args : &[String]) {
         // take ownership of the argument value and take it
         self.torsion_type = torsion ;
 
@@ -90,14 +93,14 @@ fn num_not_prompted_correctly() -> u32 {
 fn print_help() {
     println!(
         "Torsions help menu :
-            --peptide NUM : to generate torsion angles for peptide-like systems
-            --fivering NUM : to generate torsion angles for five-membered ring systems
-            --sixring NUM : to generate torsion angles for six-membered ring systems
-            \n
-            --twopi : to convert torsion angles from [-180,180] (default) to [0,360]
-            --rad : to convert torsion angles from degrees (default) to radians
-            \n
-            -h or --help to print this menu. "
+       --peptide NUM : to generate torsion angles for peptide-like systems
+       --fivering NUM : to generate torsion angles for five-membered ring systems
+       --sixring NUM : to generate torsion angles for six-membered ring systems
+       \n
+       --twopi : to convert torsion angles from [-180,180] (default) to [0,360]
+       --rad : to convert torsion angles from degrees (default) to radians
+       \n
+       -h or --help to print this menu. "
         );
         exit(0)
 
