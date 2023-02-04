@@ -58,22 +58,22 @@ where
             
             for j in 0..Z_SIZE {
                 rpij_arr[[i,j]] = ( RIJSQ - 
-                                    ( &self[[i,j]] - &self[[i, (j+1) % Z_SIZE]] ).powf(2.)
+                                    ( &self[[i,j]] - &self[[i, (j+1) % Z_SIZE]] ).powi(2)
                                   ).sqrt();
 
-                cospb_arr[[i,j]] = ( (&self[[i, (j+2) % Z_SIZE]] - &self[[i,j]]).powf(2.) // zk - zi 
-                                   - (&self[[i, (j+1) % Z_SIZE]] - &self[[i,j]]).powf(2.) // zj - zi
-                                   - (&self[[i, (j+2) % Z_SIZE]] - &self[[i,(j+1) % Z_SIZE]]).powf(2.) // zk - zj
+                cospb_arr[[i,j]] = ( (&self[[i, (j+2) % Z_SIZE]] - &self[[i,j]]).powi(2) // zk - zi 
+                                   - (&self[[i, (j+1) % Z_SIZE]] - &self[[i,j]]).powi(2) // zj - zi
+                                   - (&self[[i, (j+2) % Z_SIZE]] - &self[[i,(j+1) % Z_SIZE]]).powi(2) // zk - zj
                                    + (2. * RIJ * RIJ * COSBIJK) // 2 * rij * rjk * cos Bijk
                                    ) / (2. * &self[[i,j]] * &self[[i, (j+1) % Z_SIZE]] ); // 2 * rpij * rpjk 
 
-                sinpb_arr[[i,j]] = (1. - &cospb_arr[[i,j]].powf(2.) ).sqrt();
+                sinpb_arr[[i,j]] = (1. - &cospb_arr[[i,j]].powi(2) ).sqrt();
                 
             };
 
-            op_arr[i] = (( rpij_arr[[i,0]].powf(2.) + rpij_arr[[i,1]].powf(2.) ) - (rpij_arr[[i,0]] * rpij_arr[[i,1]] * cospb_arr[[i, 0]])).sqrt();
-            qp_arr[i] = (( rpij_arr[[i,2]].powf(2.) + rpij_arr[[i,3]].powf(2.) ) - (rpij_arr[[i,2]] * rpij_arr[[i,3]] * cospb_arr[[i, 2]])).sqrt();
-            oq_arr[i] = (( rpij_arr[[i,4]].powf(2.) + rpij_arr[[i,5]].powf(2.) ) - (rpij_arr[[i,4]] * rpij_arr[[i,5]] * cospb_arr[[i, 4]])).sqrt();
+            op_arr[i] = (( rpij_arr[[i,0]].powi(2) + rpij_arr[[i,1]].powi(2) ) - (rpij_arr[[i,0]] * rpij_arr[[i,1]] * cospb_arr[[i, 0]])).sqrt();
+            qp_arr[i] = (( rpij_arr[[i,2]].powi(2) + rpij_arr[[i,3]].powi(2) ) - (rpij_arr[[i,2]] * rpij_arr[[i,3]] * cospb_arr[[i, 2]])).sqrt();
+            oq_arr[i] = (( rpij_arr[[i,4]].powi(2) + rpij_arr[[i,5]].powi(2) ) - (rpij_arr[[i,4]] * rpij_arr[[i,5]] * cospb_arr[[i, 4]])).sqrt();
 
         }
 
