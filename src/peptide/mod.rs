@@ -1,78 +1,54 @@
-// External crate
-use ndarray::prelude::*;
-use std::clone::Clone;
 
-// This is how we import.
-// We start from our own crate and pass the absolute path to the `use` keyword
+use ndarray::Array1;
+
+// Use own libs
 use crate::arguments::Flags;
-use crate::Torsions;
+use crate::torsion_typing:: Peptide;
 
-pub fn peptide(flags: Flags) -> Torsions {
+pub fn peptide(flags: Flags) -> Peptide {
     // let the variable torsions return as a set of dihedrals
     // State at which range we want to generate the arrays
-    let range1 = if flags.twopi {
-        Dihedrals {
-            start : 0.,
-            end : 360.,
-            num : flags.num
-        }
+    let range = if flags.twopi {
+        [0., 360.]
     } else {
-        Dihedrals {
-            start : -180.,
-            end : 180.,
-            num : flags.num
-            }
-        }.generate_dihedrals(); // Consume the Dihedrals struct and return a 1D array, the X axis
+        [-180., 180.]
+    }; 
+
+    Peptide::new(flags.num, range[0], range[1])
                                 
-    let range2 = range1.clone(); // Clone the range for the Y axis
-
-    generate_x_and_y_axis(flags.num, range1, range2) // returned value
 }
 
-fn generate_x_and_y_axis(num : u32, r1 : Array1<f64>, r2 : Array1<f64>) -> Torsions {
 
-    let _sizeof : u32 = num * num;
-    let num_f64 : f64 = num as f64;
-    
-    let mut t = Torsions::new(_sizeof as usize);
+impl Peptide {
 
-    let mut x : f64;
-    let mut y : f64;
-    for i in 0.._sizeof {
-        // Calculate indexes for the array axises
-        x = (i as f64 / num_f64).floor(); // X axis, returns with floor
-        y = i as f64 % num_f64; // Y axis, return with modulo
+    /// Instantiate the entire range of the phi-psi backbone dihedrals
+    pub fn new(num : u64, start: f64, end: f64) -> Peptide {
 
-        // fill out the array
-        t.array1[i as usize] = r1[x as usize]; // indexing is only allowed with usize types
-        t.array2[i as usize] = r2[y as usize]; // indexing is only allowed with usize types
+        let _sizeof : u64 = num * num;
 
-    }
+        let ax1 = Array1::linspace(start, end, num as usize);
+        let ax2 = ax1.clone();
 
-    t // return Torsions struct
-}
+        let mut p = Peptide{
+            phi : Array1::zeros(_sizeof as usize),
+            psi : Array1::zeros(_sizeof as usize),
+        };
+        
+        let mut x : f64;
+        let mut y : f64;
+        for i in 0.._sizeof {
 
-// Create struct to generate your desired ranges of dihedrals
-struct Dihedrals {
-    start : f64,
-    end : f64,
-    num : u32
-}
+            // For every x value, return all y values
+            x = (i as f64 / num as f64).floor(); // floor, to return x axis value
+            y = i as f64 % num as f64; // return with modulo, to return y axis value
 
-// Implement a method of the Dihedrals struct
-impl Dihedrals {
-    fn generate_dihedrals(&self) -> Array1<f64> {
-        Array1::linspace(self.start, self.end, self.num as usize)
-    }
-}
+            // fill out the array
+            p.phi[i as usize] = ax1[x as usize]; 
+            p.psi[i as usize] = ax2[y as usize]; 
 
-// Implement the Copy trait
-impl Copy for Dihedrals {}
+        }
 
-// Implement the Clone trait to apply X.clone() on one of our structs
-impl Clone for Dihedrals {
-    fn clone(&self) -> Self {
-        *self
+        p 
     }
 
 }

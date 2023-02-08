@@ -19,7 +19,7 @@ use crate::sixring::geometry::{Coordinate,
 /// Then, reconstruct_coordinates() returns a Vec<SixRingAtoms>
 ///
 
-pub struct PointPositions {
+struct PointPositions {
     s11 : Coordinate,
     s12 : Coordinate,
     s13 : Coordinate,
@@ -32,12 +32,12 @@ pub struct PointPositions {
 }
 
 pub struct SixRingAtoms {
-    p1 : Coordinate,
-    p2 : Coordinate,
-    p3 : Coordinate,
-    p4 : Coordinate,
-    p5 : Coordinate,
-    p6 : Coordinate,
+    pub p1 : Coordinate,
+    pub p2 : Coordinate,
+    pub p3 : Coordinate,
+    pub p4 : Coordinate,
+    pub p5 : Coordinate,
+    pub p6 : Coordinate,
 
 }
 
@@ -67,12 +67,12 @@ impl SixRingAtoms {
 
 /// Return a Vec of all the conformers' atoms' position in cartesian coordinates
 /// Then we will derive all the alpha angles (the improper dihedrals) in a next function
-pub fn reconstruct_coordinates(proj : &ProjectionPartition, num : u32, z_j : Array2<f64>) -> Vec<SixRingAtoms> {
+pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize, z_j : Array2<f64>) -> Vec<SixRingAtoms> {
     // proj : projections and partitioning. 
 
-    let mut pyranosecoordinates = Vec::with_capacity(num as usize);
+    let mut pyranosecoordinates = Vec::with_capacity(sphere_size);
 
-    for i in 0..num as usize{
+    for i in 0..sphere_size {
 
 
         // Add the local evelation already as the z-coordinate to the final molecule's array

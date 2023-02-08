@@ -28,20 +28,17 @@
 
 // imports
 use ndarray::Array2;
-use crate::sixring::equidistance_globe::GlobeCoordinates;
-use crate::sixring::equidistance_globe::TWOPI as TWOPI;
+use crate::sixring::equidistance_sphere::SphericalCoordinates;
+use crate::sixring::equidistance_sphere::TWOPI as TWOPI;
 
 // CONSTANTS
 pub const Z_SIZE: usize = 6;
 
 #[allow(unused_assignments)]
-pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
-
-    // Instance several variables
-    let globe_size: usize = globe.phi.len();
+pub fn cremerpople_evelation(sphere : &SphericalCoordinates) -> Array2<f64> {
 
     // 6 atomic elevations (Z_j) for any set of (r, theta, phi)
-    let mut z: Array2<f64> = Array2::zeros((globe_size, Z_SIZE));
+    let mut z: Array2<f64> = Array2::zeros((sphere.amount, Z_SIZE));
 
     // Set two constant values
     let constant1: Vec<f64> = constant_from_term1();
@@ -52,15 +49,15 @@ pub fn cremerpople_evelation(globe : &GlobeCoordinates) -> Array2<f64> {
     let one_over_sqrt_six: f64 = 1_f64/6_f64.sqrt() ;
 
     let mut idx_theta: usize = 0;
-    for i in 0..globe_size { 
-        // the way we generate the globe is in layered circles.
+    for i in 0..sphere.amount { 
+        // the way we generate the sphere is in layered circles.
         // every new circle, we start off again at phi == 0.0
         // if we move to a new layer; we have to the next theta value
         // NOTE :the theta and phi arrays are not of the same length
-        if (globe.phi[i] == 0.0) && i != 0 { idx_theta += 1 };
+        if (sphere.phi[i] == 0.0) && i != 0 { idx_theta += 1 };
 
         for j in 0..Z_SIZE {
-            z[[i, j]] = calculate_local_elevation(globe.rho, globe.theta[idx_theta], globe.phi[i], &constant1[j], &constant2[j],
+            z[[i, j]] = calculate_local_elevation(sphere.rho, sphere.theta[idx_theta], sphere.phi[i], &constant1[j], &constant2[j],
                                                   sqrt_one_over_three, one_over_sqrt_six)
         }
     }

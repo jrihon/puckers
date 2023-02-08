@@ -1,6 +1,5 @@
-#![allow(unused_imports)]
 /// General Linear Algebra and math stuff I do not want to import from different libraries
-/// so I write it myself and implement on my own types
+/// so I write it myself and this way I can implement them on primitives
 ///
 
 use std::f64::consts::PI;
@@ -141,25 +140,23 @@ pub fn normalise_vector(c : Coordinate) -> Coordinate {
 /// TODO : Create mod test and test out several known sets of four points with known dihedrals !
 /// TODO : Do this before continuing to write other functions !
 ///
-//pub fn dihedral() -> f64 {
 pub fn dihedral(p0 : Coordinate, p1 : Coordinate, p2 : Coordinate, p3 : Coordinate) -> f64 {
     let b0 = p0.subtract_arr(&p1);
-    let b1 = p2.subtract_arr(&p1).normalise_vector();
+    let b1 = p2.subtract_arr(&p1).normalise_vector(); // do not let magnitude affect subsequent operations
     let b2 = p3.subtract_arr(&p2);
     
     // Vector rejections (as opposed to projections)
     // the b0/b2 will receive a rhs-subtraction from the b1-vector, which has been scaled
     let w = b0.subtract_arr( 
-          &b1.scale_vector( 
-              b0.dot_product(&b1)
-          )
-    );
+                &b1.scale_vector( 
+                    b0.dot_product(&b1)
+                )
+            );
     let v = b2.subtract_arr( 
-          &b1.scale_vector( 
-              b2.dot_product(&b1)
-          )
-    );
-    
+                &b1.scale_vector( 
+                    b2.dot_product(&b1)
+                )
+            );
     
     let x = v.dot_product(&w);
     let y = b1.cross_product(&v).dot_product(&w);

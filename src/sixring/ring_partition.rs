@@ -20,7 +20,7 @@ const COSBIJK : f64 = -1./3. ;
 
 // Make a trait where we can implement our own function on the ArrayBase<S,D> struct.
 pub trait RingPartition {
-    fn projection_and_partition(self, num : u32) -> ProjectionPartition;
+    fn projection_and_partition(self, num : usize) -> ProjectionPartition;
 }
 
 // Store ring partitioning in the struct
@@ -45,16 +45,16 @@ where
                                // other type floats or integers
 {
     /// The `self` parameter is actually the local_elevation matrix (z_j)
-    fn projection_and_partition(self, globe_size : u32) -> ProjectionPartition {
+    fn projection_and_partition(self, sphere_size : usize) -> ProjectionPartition {
 
-        let mut rpij_arr = Array2::<f64>::zeros((globe_size as usize, Z_SIZE));
-        let mut cospb_arr = Array2::<f64>::zeros((globe_size as usize, Z_SIZE));
-        let mut sinpb_arr = Array2::<f64>::zeros((globe_size as usize, Z_SIZE));
-        let mut op_arr = Array1::<f64>::zeros(globe_size as usize);
-        let mut qp_arr = Array1::<f64>::zeros(globe_size as usize);
-        let mut oq_arr = Array1::<f64>::zeros(globe_size as usize);
+        let mut rpij_arr = Array2::<f64>::zeros((sphere_size as usize, Z_SIZE));
+        let mut cospb_arr = Array2::<f64>::zeros((sphere_size as usize, Z_SIZE));
+        let mut sinpb_arr = Array2::<f64>::zeros((sphere_size as usize, Z_SIZE));
+        let mut op_arr = Array1::<f64>::zeros(sphere_size as usize);
+        let mut qp_arr = Array1::<f64>::zeros(sphere_size as usize);
+        let mut oq_arr = Array1::<f64>::zeros(sphere_size as usize);
 
-        for i in 0..globe_size as usize {
+        for i in 0..sphere_size as usize {
             
             for j in 0..Z_SIZE {
                 rpij_arr[[i,j]] = ( RIJSQ - 
