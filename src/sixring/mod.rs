@@ -8,7 +8,7 @@ mod ring_partition;
 use crate::sixring::equidistance_sphere::equidistance_sphere;
 
 use crate::arguments::Flags;
-use crate::torsion_typing:: Pyranose;
+use crate::torsion_typing::{Pyranose, Dihedrals, Axis};
 use crate::sixring::ring_partition::RingPartition;
 
 use geometry::dihedral;
@@ -19,7 +19,7 @@ const PI_DEG : f64 = 180.;
 
 /// Calculate possible sampling space (spherical coordinates)
 /// and 
-pub fn sixring(flags: Flags) -> Pyranose {
+pub fn sixring(flags: Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
 
     let sphere = equidistance_sphere(flags.num);
 
@@ -40,7 +40,7 @@ pub fn sixring(flags: Flags) -> Pyranose {
         p.alpha3[i] = dihedral(pyr.p3, pyr.p5, pyr.p1, pyr.p6) - PI_DEG;
     }
 
-    p
+    (Box::new(p), Box::new(sphere))
 }
 
 //fn print_sphere_cartesians(sphere: GlobeCoordinates) {

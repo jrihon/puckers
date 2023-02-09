@@ -1,4 +1,3 @@
-#![allow(unused_mut)]
 use ndarray::Array2;
 use std::f64::consts::PI;
 
@@ -19,6 +18,8 @@ use crate::sixring::geometry::{Coordinate,
 /// Then, reconstruct_coordinates() returns a Vec<SixRingAtoms>
 ///
 
+// fields s11, s25 and s31 are never read
+#[allow(dead_code)]
 struct PointPositions {
     s11 : Coordinate,
     s12 : Coordinate,
@@ -97,7 +98,7 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         //	S36[0] = rpij[5];	S36[1] = 0.;
         //	S31[0] = 0.;	S31[1] = 0.;
         //
-        let mut pyranose = PointPositions {
+        let pyranose = PointPositions {
                 s11 : 
                     [0.,
                      0.,
@@ -171,17 +172,17 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         let sigma3 = rho3;
 
         // p1, p3, p5 already exist on the xy'-plane, so need only to rotate p2,p4,p6
-        let mut tmp_sixring = SixRingAtoms {
+        let tmp_sixring = SixRingAtoms {
             p1 : p_o,
             p2 : RotationMatrix::new(-sigma1).apply_rotation(pyranose.s12),
             p3 : p_p,
             p4 : RotationMatrix::new(sigma2).apply_rotation(subtract_arr(pyranose.s24, p_q)),
             p5 : p_q,
-            p6 : RotationMatrix::new(-sigma1).apply_rotation(pyranose.s36),
+            p6 : RotationMatrix::new(-sigma3).apply_rotation(pyranose.s36),
         };
 
         // Calculate geometric center
-        let mut p_g : Coordinate = tmp_sixring.calculate_geometric_center();
+        let p_g : Coordinate = tmp_sixring.calculate_geometric_center();
         // Derive final rotation matrix
         let rho_g = (PI / 2.) + p_g[1].atan2(p_g[0]);
         let rot4 = RotationMatrix::new(-rho_g);

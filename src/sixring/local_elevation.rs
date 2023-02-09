@@ -28,7 +28,7 @@
 
 // imports
 use ndarray::Array2;
-use crate::sixring::equidistance_sphere::SphericalCoordinates;
+use crate::torsion_typing::SphericalCoordinates;
 use crate::sixring::equidistance_sphere::TWOPI as TWOPI;
 
 // CONSTANTS

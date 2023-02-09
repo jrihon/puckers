@@ -1,11 +1,13 @@
-
-use ndarray::Array1;
+//use ndarray::Array1;
 
 // Use own libs
 use crate::arguments::Flags;
-use crate::torsion_typing:: Peptide;
+use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals, Axis};
 
-pub fn peptide(flags: Flags) -> Peptide {
+
+
+pub fn peptide(flags: Flags) ->(Box<dyn Dihedrals>, Box<dyn Axis>) {
+//pub fn peptide(flags: Flags) -> (Box<&'static Peptide>, Box<&'static BackboneCoordinates>) {
     // let the variable torsions return as a set of dihedrals
     // State at which range we want to generate the arrays
     let range = if flags.twopi {
@@ -14,41 +16,24 @@ pub fn peptide(flags: Flags) -> Peptide {
         [-180., 180.]
     }; 
 
-    Peptide::new(flags.num, range[0], range[1])
-                                
-}
+    let _sizeof : u64 = flags.num * flags.num;
 
+    let bb = BackboneCoordinates::new(range[0], range[1], _sizeof as usize);
 
-impl Peptide {
+    let mut p = Peptide::new(_sizeof as usize);
+    
+    let mut x : f64;
+    let mut y : f64;
+    for i in 0.._sizeof as usize {
 
-    /// Instantiate the entire range of the phi-psi backbone dihedrals
-    pub fn new(num : u64, start: f64, end: f64) -> Peptide {
+        // For every x value, return all y values
+        x = (i as f64 / flags.num as f64).floor(); // floor, to return x axis value
+        y = i as f64 % flags.num as f64; // return with modulo, to return y axis value
 
-        let _sizeof : u64 = num * num;
-
-        let ax1 = Array1::linspace(start, end, num as usize);
-        let ax2 = ax1.clone();
-
-        let mut p = Peptide{
-            phi : Array1::zeros(_sizeof as usize),
-            psi : Array1::zeros(_sizeof as usize),
-        };
-        
-        let mut x : f64;
-        let mut y : f64;
-        for i in 0.._sizeof {
-
-            // For every x value, return all y values
-            x = (i as f64 / num as f64).floor(); // floor, to return x axis value
-            y = i as f64 % num as f64; // return with modulo, to return y axis value
-
-            // fill out the array
-            p.phi[i as usize] = ax1[x as usize]; 
-            p.psi[i as usize] = ax2[y as usize]; 
-
-        }
-
-        p 
+        // fill out the array
+        p.phi[i as usize] = bb.x[x as usize]; 
+        p.psi[i as usize] = bb.y[y as usize]; 
     }
 
+    (Box::new(p), Box::new(bb))
 }

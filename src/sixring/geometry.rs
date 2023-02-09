@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 /// General Linear Algebra and math stuff I do not want to import from different libraries
 /// so I write it myself and this way I can implement them on primitives
 ///

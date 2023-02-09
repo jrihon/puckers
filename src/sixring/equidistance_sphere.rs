@@ -22,9 +22,10 @@
 
 // import modules
 use std::f64::consts::PI;
-use ndarray::Array1;
 
-const RHO : f64 = 0.67; // radius of the sphere; constant
+use crate::torsion_typing::SphericalCoordinates;
+
+pub const RHO : f64 = 0.67; // radius of the sphere; constant
 pub const TWOPI : f64 = 2. * PI; // two pi; constant
 
 pub fn equidistance_sphere(num : u64 ) -> SphericalCoordinates {
@@ -46,7 +47,7 @@ pub fn equidistance_sphere(num : u64 ) -> SphericalCoordinates {
 
     let num_sizeof: usize = corrected_num_amount_to_size_up_arrays(m_theta, d_phi);
     // Instance struct
-    let mut globe = SphericalCoordinates::new(num_sizeof, m_theta as usize);
+    let mut globe = SphericalCoordinates::new(num_sizeof, m_theta as usize, RHO);
 
     for m in 0..m_theta as u32 {
         globe.theta[m as usize] = (PI * (m as f64 + 0.5)) / m_theta;
@@ -87,36 +88,4 @@ fn corrected_num_amount_to_size_up_arrays(m_theta : f64, d_phi : f64) -> usize {
 /// --> (0.67^2 * PI * 4) / (1.00^2 * PI * 4) => 0.67^2
 fn corrected_amount_of_points(num : f64) -> f64 {
     num * RHO.powi(2)
-}
-
-
-pub struct SphericalCoordinates {
-    pub x : Array1<f64>,
-    pub y : Array1<f64>,
-    pub z : Array1<f64>,
-    pub rho : f64,
-    pub theta : Array1<f64>,
-    pub phi : Array1<f64>,
-    pub amount : usize,
-}
-
-
-impl SphericalCoordinates {
-    fn new(num: usize, m_theta : usize) -> SphericalCoordinates {
-        SphericalCoordinates {
-            x : Array1::<f64>::zeros(num),
-            y : Array1::<f64>::zeros(num),
-            z : Array1::<f64>::zeros(num),
-            rho : RHO,
-            theta : Array1::<f64>::zeros(m_theta),
-            phi : Array1::<f64>::zeros(num),
-            amount : num,
-        }
-    }
-
-    fn polar_to_cartesian(&mut self, i : usize, m : usize) {
-        self.x[i] = self.rho * self.theta[m].sin() * self.phi[i].cos();
-        self.y[i] = self.rho * self.theta[m].sin() * self.phi[i].sin();
-        self.z[i] = self.rho * self.theta[m].cos();     
-    }
 }

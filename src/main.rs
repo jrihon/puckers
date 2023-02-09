@@ -25,7 +25,7 @@ mod sixring;
 
 // Use own libs
 use crate::arguments::Flags;
-use crate::torsion_typing::TorsionType;
+use crate::torsion_typing::{TorsionType, Dihedrals, Axis};
 
 ///
 ///
@@ -35,6 +35,7 @@ use crate::torsion_typing::TorsionType;
 ///
 ///
 /// ---------------- MAIN ---------------- 
+#[allow(unused_variables)]
 fn main() {
 
     let args: Vec<String> = args().collect(); // collect passed arguments from CLI
@@ -43,7 +44,7 @@ fn main() {
     let flags = Flags::return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
     // get the torsion angles and the axes
-    let torsions = run(flags);
+    let (torsions, axis) = run(flags);
 
     // Print the results
 //    torsions.print_arrays();
@@ -51,7 +52,7 @@ fn main() {
 
 
 
-fn run(flags :Flags) -> Torsions {
+fn run(flags :Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
 
     // Match the type of torsion angles needed to generate and then output them
     //
@@ -60,13 +61,13 @@ fn run(flags :Flags) -> Torsions {
     // and then we lose it and get a partial move (where one of the field's values has been moved
     // in a struct)
     // That is why we match against a reference to the value
-    match &flags.torsion_type {
+    let (t, a) = match &flags.torsion_type {
         Some(torsion) => match torsion {
             TorsionType::Backbone =>  peptide::peptide(flags),
             TorsionType::Fivering =>  fivering::fivering(flags),
             TorsionType::Sixring =>  sixring:: sixring(flags),
         },
         None => panic!("Flag Not Found")
-    }
-
+    };
+    (t, a)
 }
