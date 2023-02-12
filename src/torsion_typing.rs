@@ -1,6 +1,7 @@
 use ndarray::Array1;
 
 use crate::arguments::Flags;
+use crate::sixring::equidistance_sphere::equidistance_sphere;
 
 // Which torsion type is going to be calculated
 //#[derive(Debug, Clone)]
@@ -110,9 +111,9 @@ impl FurCoords {
 
 #[derive(Debug)]
 pub struct SphericalCoordinates {
-    pub x : Array1<f64>,
-    pub y : Array1<f64>,
-    pub z : Array1<f64>,
+//    pub x : Array1<f64>,
+//    pub y : Array1<f64>,
+//    pub z : Array1<f64>,
     pub rho : f64,
     pub theta : Array1<f64>,
     pub phi : Array1<f64>,
@@ -123,9 +124,9 @@ pub struct SphericalCoordinates {
 impl SphericalCoordinates {
     pub fn new(num: usize, m_theta : usize, rhoo: f64) -> SphericalCoordinates {
         SphericalCoordinates {
-            x : Array1::<f64>::zeros(num),
-            y : Array1::<f64>::zeros(num),
-            z : Array1::<f64>::zeros(num),
+//            x : Array1::<f64>::zeros(num),
+//            y : Array1::<f64>::zeros(num),
+//            z : Array1::<f64>::zeros(num),
             rho : rhoo,
             theta : Array1::<f64>::zeros(m_theta),
             phi : Array1::<f64>::zeros(num),
@@ -133,11 +134,11 @@ impl SphericalCoordinates {
         }
     }
 
-    pub fn polar_to_cartesian(&mut self, i : usize, m : usize) {
-        self.x[i] = self.rho * self.theta[m].sin() * self.phi[i].cos();
-        self.y[i] = self.rho * self.theta[m].sin() * self.phi[i].sin();
-        self.z[i] = self.rho * self.theta[m].cos();     
-    }
+//    pub fn polar_to_cartesian(&mut self, i : usize, m : usize) {
+//        self.x[i] = self.rho * self.theta[m].sin() * self.phi[i].cos();
+//        self.y[i] = self.rho * self.theta[m].sin() * self.phi[i].sin();
+//        self.z[i] = self.rho * self.theta[m].cos();     
+//    }
 }
 
 
@@ -165,7 +166,18 @@ impl SphericalCoordinates {
 /// }
 
 pub trait Dihedrals {
-    fn print_to_stdout(&self, _flag : Flags);
+    fn print_to_stdout(&self, flag : Flags);
+    // the problem with this program is that we want to return the axis alongside the torsion
+    // angles
+    // since we had to return the axes as trait object, we cannot access its field
+    // as they are unknown and therefor the compiler cannot guarantee it is there.
+    // Technically, this could work with an unsafe block, but I feel that is unreasonable.
+    //
+    // The alternative is to recalculate the entire axis, which is what I'll do.
+    // Not the best, but definitely not the worst idea. It is probably a couple extra milliseconds
+    // extra time to calculate, but negligible
+    // In all fairness, it is probably better this way, as here we can allow mutation of the
+    // axes, whereas with a trait object I am not all too certain.
 
 }
 
@@ -173,9 +185,26 @@ impl Dihedrals for Peptide {
 
     fn print_to_stdout(&self, flag : Flags) {
 
+        let range = if flag.twopi {
+            [0., 360.]
+        } else {
+            [-180., 180.]
+        }; 
+
+        let axis = BackboneCoordinates::new(range[0], range[1], flag.num as usize);
+
         let _sizeof: usize = flag.num as usize * flag.num as usize;
+        let num_f64 = flag.num as f64;
+        let mut x : f64;
+        let mut y : f64;
+
+        println!("ALPHA  ZETA    X     Y");
         for i in 0.._sizeof {
-            println!("{:4.3} {:4.3}", self.phi[i], self.psi[i])
+
+            x = (i as f64 / num_f64).floor(); 
+            y = i as f64 % num_f64; 
+
+            println!("{:4.3} {:4.3} {:4.3} {:4.3}", self.phi[i], self.psi[i], axis.x[x as usize], axis.y[y as usize])
         }
     }
 
@@ -184,19 +213,39 @@ impl Dihedrals for Furanose {
 
     fn print_to_stdout(&self, flag : Flags) {
         let _sizeof: usize = flag.num as usize * flag.num as usize;
+
+        let axis = FurCoords::new(flag.num as usize);
+        let mut x : f64;
+        let mut y : f64;
+        let num_f64 : f64 = flag.num as f64;
+
+
+
+        println!("NU1  NU3  Zx  Zy");
         for i in 0.._sizeof {
-            println!("{:4.3} {:4.3}", self.nu1[i], self.nu3[i])
+
+            x = (i as f64 / num_f64).floor();
+            y = i as f64 % num_f64; 
+
+            println!("{:4.3} {:4.3} {:4.3} {:4.3}", self.nu1[i], self.nu3[i], axis.zx[x as usize], axis.zy[y as usize])
         }
     }
 }
 impl Dihedrals for Pyranose {
-    fn print_to_stdout(&self, _flag : Flags) {
-        let _sizeof = self.alpha1.len();
-        for i in 0.._sizeof {
-            println!("{:4.3} {:4.3} {:4.3}", self.alpha1[i], self.alpha2[i], self.alpha3[i])
+    fn print_to_stdout(&self, flag : Flags) {
+
+        let axis = equidistance_sphere(flag.num);
+
+        let mut it: usize = 0;
+
+        println!("ALPHA1  ALPHA2  ALPHA3  RHO  THETA  PHI");
+        for i in 0..axis.amount {
+            if (axis.phi[i] == 0.0) && i != 0 { it += 1 }
+
+            println!("{:4.3} {:4.3} {:4.3} {:4.3} {:4.3} {:4.3}", self.alpha1[i], self.alpha2[i], self.alpha3[i], 
+                     axis.rho, axis.theta[it], axis.phi[i])
         }
     }
-
 }
 
 

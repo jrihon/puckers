@@ -55,7 +55,7 @@ pub fn equidistance_sphere(num : u64 ) -> SphericalCoordinates {
 
         for n in 0..m_phi as u32 {
             globe.phi[idx as usize] = (TWOPI * n as f64) / m_phi;
-            globe.polar_to_cartesian(idx as usize, m as usize);
+//            globe.polar_to_cartesian(idx as usize, m as usize);
             idx += 1;
             
         }

@@ -15,7 +15,6 @@
 // Standard libs
 use std::env::args;
 
-
 // Declare modules
 mod arguments;
 mod torsion_typing;
@@ -25,7 +24,7 @@ mod sixring;
 
 // Use own libs
 use crate::arguments::Flags;
-use crate::torsion_typing::{TorsionType, Dihedrals, Axis};
+use crate::torsion_typing::{TorsionType, Dihedrals};
 
 ///
 ///
@@ -44,7 +43,7 @@ fn main() {
     let flags = Flags::return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
     // get the torsion angles and the axes
-    let (torsions, axis) = run(&flags);
+    let torsions = run(&flags);
 
     // Print the results
     torsions.print_to_stdout(flags);
@@ -53,7 +52,7 @@ fn main() {
 
 
 
-fn run(flags :&Flags) -> (Box<dyn Dihedrals + 'static>, Box<dyn Axis + 'static>) {
+fn run(flags :&Flags) -> Box<dyn Dihedrals + 'static> {
 
     // Match the type of torsion angles needed to generate and then output them
     //
@@ -62,7 +61,7 @@ fn run(flags :&Flags) -> (Box<dyn Dihedrals + 'static>, Box<dyn Axis + 'static>)
     // and then we lose it and get a partial move (where one of the field's values has been moved
     // in a struct)
     // That is why we match against a reference to the value
-    let (t, a) = match &flags.torsion_type {
+    let t = match &flags.torsion_type {
         Some(torsion) => match torsion {
             TorsionType::Backbone =>  peptide::peptide(flags),
             TorsionType::Fivering =>  fivering::fivering(flags),
@@ -70,5 +69,5 @@ fn run(flags :&Flags) -> (Box<dyn Dihedrals + 'static>, Box<dyn Axis + 'static>)
         },
         None => panic!("Flag Not Found")
     };
-    (t, a)
+    t
 }

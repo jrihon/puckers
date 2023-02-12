@@ -51,18 +51,16 @@ impl SixRingAtoms {
     /// and leave the third value in the array as 0.
     fn calculate_geometric_center(&self) -> Coordinate {
 
-        let mut p_g : Coordinate = [0.,0.,0.]; // the geometric center
-
-        for i in 0..3 { // 0 -> 1 -> 2
-            p_g[i] = (self.p1[i] + self.p2[i] + self.p3[i] + self.p4[i] + self.p5[i] + self.p6[i]) / 6.
-        }
-
-        p_g
-
-//        Check if this actually works lol, because this would be peak rust idiomatic 
-//        [0, 1, 2].map( |i| 
-//                       (self.p1[i] + self.p2[i] + self.p3[i] + self.p4[i] + self.p5[i] + &self.p6[i]) / 6.
-//                     )
+//        let mut p_g : Coordinate = [0.,0.,0.]; // the geometric center
+//
+//        for i in 0..3 { // 0 -> 1 -> 2
+//            p_g[i] = (self.p1[i] + self.p2[i] + self.p3[i] + self.p4[i] + self.p5[i] + self.p6[i]) / 6.
+//        }
+//
+//        p_g
+        [0, 1, 2].map( |i| 
+                       (self.p1[i] + self.p2[i] + self.p3[i] + self.p4[i] + self.p5[i] + self.p6[i]) / 6.
+                     )
     }
     
 }
@@ -211,4 +209,39 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
     }
 
     pyranosecoordinates // return Vec<SixRingAtoms>
+}
+
+
+
+
+#[cfg(test)]
+mod reconstruction {
+    use super::*;
+
+    #[test]
+    pub fn test_indexing() {
+
+        let sr = SixRingAtoms {
+            p1 : [1.16, 1.23, 0.45],
+            p2 : [0.02, 2.97, 0.34],
+            p3 : [3.24, 3.69, 2.81],
+            p4 : [1.21, 0.71, 3.74],
+            p5 : [2.95, 0.11, 0.28],
+            p6 : [0.87, 2.99, 0.25],
+        };
+
+        let mut p1 : Coordinate = [0.,0.,0.]; // the geometric center
+
+        for i in 0..3 { // 0 -> 1 -> 2
+            p1[i] = (sr.p1[i] + sr.p2[i] + sr.p3[i] + sr.p4[i] + sr.p5[i] + sr.p6[i]) / 6.
+        }
+
+        let p2 = [0, 1, 2].map( |i| 
+                       (sr.p1[i] + sr.p2[i] + sr.p3[i] + sr.p4[i] + sr.p5[i] + sr.p6[i]) / 6.
+                     );
+
+        // if the arrays are equal, their iterated sum should also be equal
+        assert_eq!(p1.iter().sum::<f64>(), p2.iter().sum());
+        
+    }
 }

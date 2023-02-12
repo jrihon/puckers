@@ -1,12 +1,12 @@
 use std::f64::consts::PI;
 
 use crate::arguments::Flags;
-use crate::torsion_typing::{Furanose, FurCoords, Dihedrals, Axis};
+use crate::torsion_typing::{Furanose, FurCoords, Dihedrals};
 
 
 
 
-pub fn fivering(flags : &Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
+pub fn fivering(flags : &Flags) -> Box<dyn Dihedrals> {
     
     // Derive torsion angles from the given axes
     
@@ -37,5 +37,5 @@ pub fn fivering(flags : &Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
         f.nu3[i as usize] = (( polars.zx[x as usize] * denominator_x ) - ( polars.zy[y as usize] * denominator_y)) / 2.;
     }
 
-    (Box::new(f), Box::new(polars))
+    Box::new(f)
 }

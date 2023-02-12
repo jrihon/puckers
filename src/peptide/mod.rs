@@ -2,11 +2,11 @@
 
 // Use own libs
 use crate::arguments::Flags;
-use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals, Axis};
+use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals};
 
 
 
-pub fn peptide(flags: &Flags) ->(Box<dyn Dihedrals>, Box<dyn Axis>) {
+pub fn peptide(flags: &Flags) ->Box<dyn Dihedrals> {
 //pub fn peptide(flags: Flags) -> (Box<&'static Peptide>, Box<&'static BackboneCoordinates>) {
     // let the variable torsions return as a set of dihedrals
     // State at which range we want to generate the arrays
@@ -35,5 +35,5 @@ pub fn peptide(flags: &Flags) ->(Box<dyn Dihedrals>, Box<dyn Axis>) {
         p.psi[i as usize] = bb.y[y as usize]; 
     }
 
-    (Box::new(p), Box::new(bb))
+    Box::new(p)
 }

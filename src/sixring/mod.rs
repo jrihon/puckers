@@ -1,5 +1,5 @@
 // import module(sixring) modules
-mod equidistance_sphere;
+pub mod equidistance_sphere;
 mod geometry;
 mod local_elevation;
 mod reconstruct_ring;
@@ -8,7 +8,7 @@ mod ring_partition;
 use crate::sixring::equidistance_sphere::equidistance_sphere;
 
 use crate::arguments::Flags;
-use crate::torsion_typing::{Pyranose, Dihedrals, Axis};
+use crate::torsion_typing::{Pyranose, Dihedrals};
 use crate::sixring::ring_partition::RingPartition;
 
 use geometry::dihedral;
@@ -19,7 +19,7 @@ const PI_DEG : f64 = 180.;
 
 /// Calculate possible sampling space (spherical coordinates)
 /// and 
-pub fn sixring(flags: &Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
+pub fn sixring(flags: &Flags) -> Box<dyn Dihedrals> {
 
     let sphere = equidistance_sphere(flags.num);
 
@@ -40,15 +40,9 @@ pub fn sixring(flags: &Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
         p.alpha3[i] = dihedral(pyr.p3, pyr.p5, pyr.p1, pyr.p6);.. - PI_DEG;
     }
 
-    (Box::new(p), Box::new(sphere))
+    Box::new(p)
 }
 
-//fn print_sphere_cartesians(sphere: GlobeCoordinates) {
-//    for i in 0..sphere.x.len() {
-//        println!("{:?}", (sphere.x[i], sphere.y[i], sphere.z[i]))
-//    }
-//}
-//
 //fn print_sphere_sphericals(sphere: GlobeCoordinates) {
 //    let mut idx_theta: usize = 0;
 //
