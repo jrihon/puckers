@@ -19,7 +19,7 @@ const PI_DEG : f64 = 180.;
 
 /// Calculate possible sampling space (spherical coordinates)
 /// and 
-pub fn sixring(flags: Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
+pub fn sixring(flags: &Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
 
     let sphere = equidistance_sphere(flags.num);
 
@@ -35,9 +35,9 @@ pub fn sixring(flags: Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
     );
 
     for (i, pyr) in vec_of_pyranoses.iter().enumerate() {
-        p.alpha1[i] = dihedral(pyr.p5, pyr.p1, pyr.p3, pyr.p2) - PI_DEG;
-        p.alpha2[i] = dihedral(pyr.p1, pyr.p3, pyr.p5, pyr.p4) - PI_DEG;
-        p.alpha3[i] = dihedral(pyr.p3, pyr.p5, pyr.p1, pyr.p6) - PI_DEG;
+        p.alpha1[i] = dihedral(pyr.p5, pyr.p1, pyr.p3, pyr.p2);.. - PI_DEG;
+        p.alpha2[i] = dihedral(pyr.p1, pyr.p3, pyr.p5, pyr.p4);.. - PI_DEG;
+        p.alpha3[i] = dihedral(pyr.p3, pyr.p5, pyr.p1, pyr.p6);.. - PI_DEG;
     }
 
     (Box::new(p), Box::new(sphere))

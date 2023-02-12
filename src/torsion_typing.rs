@@ -1,7 +1,9 @@
 use ndarray::Array1;
 
+use crate::arguments::Flags;
+
 // Which torsion type is going to be calculated
-#[derive(Debug)]
+//#[derive(Debug, Clone)]
 pub enum TorsionType {
     Backbone,
     Fivering,
@@ -106,6 +108,7 @@ impl FurCoords {
 }
 
 
+#[derive(Debug)]
 pub struct SphericalCoordinates {
     pub x : Array1<f64>,
     pub y : Array1<f64>,
@@ -161,11 +164,40 @@ impl SphericalCoordinates {
 ///     }
 /// }
 
-pub trait Dihedrals {}
+pub trait Dihedrals {
+    fn print_to_stdout(&self, _flag : Flags);
 
-impl Dihedrals for Peptide {}
-impl Dihedrals for Furanose {}
-impl Dihedrals for Pyranose {}
+}
+
+impl Dihedrals for Peptide {
+
+    fn print_to_stdout(&self, flag : Flags) {
+
+        let _sizeof: usize = flag.num as usize * flag.num as usize;
+        for i in 0.._sizeof {
+            println!("{:4.3} {:4.3}", self.phi[i], self.psi[i])
+        }
+    }
+
+}
+impl Dihedrals for Furanose {
+
+    fn print_to_stdout(&self, flag : Flags) {
+        let _sizeof: usize = flag.num as usize * flag.num as usize;
+        for i in 0.._sizeof {
+            println!("{:4.3} {:4.3}", self.nu1[i], self.nu3[i])
+        }
+    }
+}
+impl Dihedrals for Pyranose {
+    fn print_to_stdout(&self, _flag : Flags) {
+        let _sizeof = self.alpha1.len();
+        for i in 0.._sizeof {
+            println!("{:4.3} {:4.3} {:4.3}", self.alpha1[i], self.alpha2[i], self.alpha3[i])
+        }
+    }
+
+}
 
 
 

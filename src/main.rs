@@ -44,15 +44,16 @@ fn main() {
     let flags = Flags::return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
     // get the torsion angles and the axes
-    let (torsions, axis) = run(flags);
+    let (torsions, axis) = run(&flags);
 
     // Print the results
-//    torsions.print_arrays();
+    torsions.print_to_stdout(flags);
+//    Deref::deref(&torsions).print_to_stdout(flags);
 }
 
 
 
-fn run(flags :Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
+fn run(flags :&Flags) -> (Box<dyn Dihedrals + 'static>, Box<dyn Axis + 'static>) {
 
     // Match the type of torsion angles needed to generate and then output them
     //

@@ -20,6 +20,7 @@ use crate::sixring::geometry::{Coordinate,
 
 // fields s11, s25 and s31 are never read
 #[allow(dead_code)]
+#[derive(Debug)]
 struct PointPositions {
     s11 : Coordinate,
     s12 : Coordinate,
@@ -32,6 +33,7 @@ struct PointPositions {
     s31 : Coordinate,
 }
 
+#[derive(Debug)]
 pub struct SixRingAtoms {
     pub p1 : Coordinate,
     pub p2 : Coordinate,
@@ -98,6 +100,8 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         //	S36[0] = rpij[5];	S36[1] = 0.;
         //	S31[0] = 0.;	S31[1] = 0.;
         //
+        //
+        // NaN value in s13.y , s23.y , s35.y , which is likely attributed to sinpbijk
         let pyranose = PointPositions {
                 s11 : 
                     [0.,

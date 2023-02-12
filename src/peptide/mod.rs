@@ -6,7 +6,7 @@ use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals, Axis};
 
 
 
-pub fn peptide(flags: Flags) ->(Box<dyn Dihedrals>, Box<dyn Axis>) {
+pub fn peptide(flags: &Flags) ->(Box<dyn Dihedrals>, Box<dyn Axis>) {
 //pub fn peptide(flags: Flags) -> (Box<&'static Peptide>, Box<&'static BackboneCoordinates>) {
     // let the variable torsions return as a set of dihedrals
     // State at which range we want to generate the arrays
@@ -18,7 +18,7 @@ pub fn peptide(flags: Flags) ->(Box<dyn Dihedrals>, Box<dyn Axis>) {
 
     let _sizeof : u64 = flags.num * flags.num;
 
-    let bb = BackboneCoordinates::new(range[0], range[1], _sizeof as usize);
+    let bb = BackboneCoordinates::new(range[0], range[1], flags.num as usize);
 
     let mut p = Peptide::new(_sizeof as usize);
     

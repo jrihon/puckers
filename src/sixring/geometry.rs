@@ -65,6 +65,10 @@ impl LinAlg for Coordinate {
     }
 
     /// Normalise the size of the Coordinate
+    /// ```
+    /// let d = 1. / self.norm(); 
+    /// self.map(|x: f64| d * x) // apply the factor `d` to all elements of the coordinate
+    /// ```
     fn normalise_vector(&self) -> Coordinate {
        let d = 1. / self.norm(); 
 
@@ -148,12 +152,12 @@ pub fn dihedral(p0 : Coordinate, p1 : Coordinate, p2 : Coordinate, p3 : Coordina
     
     // Vector rejections (as opposed to projections)
     // the b0/b2 will receive a rhs-subtraction from the b1-vector, which has been scaled
-    let w = b0.subtract_arr( 
+    let v = b0.subtract_arr( 
                 &b1.scale_vector( 
                     b0.dot_product(&b1)
                 )
             );
-    let v = b2.subtract_arr( 
+    let w = b2.subtract_arr( 
                 &b1.scale_vector( 
                     b2.dot_product(&b1)
                 )
@@ -213,4 +217,48 @@ impl RotMatrix for RotationMatrix {
 /// would makes all the other uses of the Coordinate type in this program very ugly
 pub fn subtract_arr(a : Coordinate, b : Coordinate) -> Coordinate {
     [ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]
+}
+
+
+
+#[cfg(test)]
+mod test_linalg {
+
+    use assert_float_eq::*;
+    use super::*;
+
+    #[test]
+    pub fn planarity() {
+        //N1   6.105   8.289   4.633    
+        //C2   7.360   7.768   4.827    
+        //N3   7.390   6.603   5.551    
+        //C4   6.301   5.942   6.079    
+
+        let planar = dihedral(
+                        [6.105, 8.289, 4.633],
+                        [7.360, 7.768, 4.827],
+                        [7.390, 6.603, 5.551],
+                        [6.301, 5.942, 6.079]
+                        );
+        // assert up until the 3rd decimal
+        assert_float_absolute_eq!(planar, -0.07, 0.001)
+    }
+
+    #[test]
+    pub fn chi_angle() {
+        //O4'   5.157  10.381   4.681  
+        //C1'   5.981   9.551   3.863  
+        //N1    6.105   8.289   4.633  
+        //C2    7.360   7.768   4.827  
+
+        let chi = dihedral(
+                        [5.157, 10.381, 4.681],
+                        [5.981, 9.551, 3.863],
+                        [6.105, 8.289, 4.633],
+                        [7.360, 7.768, 4.827]
+                        );
+        // assert up until the 3rd decimal
+        assert_float_absolute_eq!(chi, -130.214, 0.001)
+    }
+
 }

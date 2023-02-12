@@ -60,12 +60,19 @@ where
                 rpij_arr[[i,j]] = ( RIJSQ - 
                                     ( &self[[i,j]] - &self[[i, (j+1) % Z_SIZE]] ).powi(2)
                                   ).sqrt();
+            }
 
+            for j in 0..Z_SIZE {
+
+                // sphere points are in radians
+                // the values of the cosine values are abnormal
+                // they all appear in values above 2PI and are often negative. This shouldnt be the
+                // case, where cosine values can only be between [-1 , 1]
                 cospb_arr[[i,j]] = ( (&self[[i, (j+2) % Z_SIZE]] - &self[[i,j]]).powi(2) // zk - zi 
                                    - (&self[[i, (j+1) % Z_SIZE]] - &self[[i,j]]).powi(2) // zj - zi
                                    - (&self[[i, (j+2) % Z_SIZE]] - &self[[i,(j+1) % Z_SIZE]]).powi(2) // zk - zj
                                    + (2. * RIJ * RIJ * COSBIJK) // 2 * rij * rjk * cos Bijk
-                                   ) / (2. * &self[[i,j]] * &self[[i, (j+1) % Z_SIZE]] ); // 2 * rpij * rpjk 
+                                   ) / (2. * rpij_arr[[i,j]] * rpij_arr[[i, (j+1) % Z_SIZE]] ); // 2 * rpij * rpjk 
 
                 sinpb_arr[[i,j]] = (1. - &cospb_arr[[i,j]].powi(2) ).sqrt();
                 
@@ -97,6 +104,9 @@ where
 //                //rpij_arr[[i,j]] = RIJSQ - ( self.get((i,j)).unwrap() - self.get((i, (j+1)/Z_SIZE)).unwrap() )
 //
 
+//        println!("{}", rpij_arr);
+//        println!("{}", cospb_arr);
+//        println!("{}", sinpb_arr);
         ProjectionPartition { 
             rpij: rpij_arr,
             cosbpijk: cospb_arr,

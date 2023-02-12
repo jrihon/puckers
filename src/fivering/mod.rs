@@ -6,7 +6,7 @@ use crate::torsion_typing::{Furanose, FurCoords, Dihedrals, Axis};
 
 
 
-pub fn fivering(flags : Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
+pub fn fivering(flags : &Flags) -> (Box<dyn Dihedrals>, Box<dyn Axis>) {
     
     // Derive torsion angles from the given axes
     

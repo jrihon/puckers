@@ -3,7 +3,7 @@ use std::process::exit; // exit function, Used to disregard panic!() messages
 use crate::torsion_typing::TorsionType;
 
 /// How cli arguments
-#[derive(Debug)]
+//#[derive(Debug, Clone)]
 pub struct Flags {
     pub torsion_type : Option<TorsionType>,
     pub num : u64,
@@ -40,7 +40,7 @@ impl Flags {
 
     /// Pass the Vec of Strings, which are the CLI arguments that are given to puckers
     /// and are processed and returned as a neat struct to the main function.
-    pub fn return_cli_arguments(cli_args: Vec<String>) -> Flags {
+    pub fn return_cli_arguments(mut cli_args: Vec<String>) -> Flags {
 
         // If help is prompted
         if cli_args.len() == 1 { print_help() };
@@ -57,23 +57,29 @@ impl Flags {
         // Instantiate a mutable Flags struct
         let mut flag = Flags::new();
 
+        cli_args.drain(..1); // remove $PATH to binary as one of the cli args
+
         // Loop over the `args` argument, which are cli_arguments
         for (i, arg) in cli_args.iter().enumerate() {
             if arg == "--peptide" { 
                 flag.add_torsion_and_num_fields(i, Some(TorsionType::Backbone), &cli_args)
-            };
-            if arg == "--fivering" { 
+            } else if arg == "--fivering" { 
                 flag.add_torsion_and_num_fields(i, Some(TorsionType::Fivering), &cli_args)
-            };
-            if arg == "--sixring" { 
+            } else if arg == "--sixring" { 
                 flag.add_torsion_and_num_fields(i, Some(TorsionType::Sixring), &cli_args)
-            };
-
-            if arg == "--rad" { flag.rad = true };
-            if arg == "--axis" { flag.axis = true };
-            if arg == "--twopi" { flag.twopi = true };
+            } else if arg == "--rad" {
+                flag.rad = true 
+            } else if arg == "--axis" {
+                flag.axis = true 
+            } else if arg == "--twopi" {
+                flag.twopi = true 
+            } else if arg.parse::<u64>().is_ok() {
+            } else {
+                panic!("`{}` is not a valid argument.", arg)
+            }
 
         };
+
 
         flag
     }
