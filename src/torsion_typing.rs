@@ -83,10 +83,10 @@ pub struct BackboneCoordinates {
 }
 
 impl BackboneCoordinates {
-    pub fn new(start: f64, end: f64, num: usize) -> BackboneCoordinates {
+    pub fn new(num: usize) -> BackboneCoordinates {
         BackboneCoordinates {
-            x: Array1::linspace(start, end, num),
-            y: Array1::linspace(start, end, num),
+            x: Array1::linspace(0., 360., num),
+            y: Array1::linspace(0., 360., num),
         }
     }
 }
@@ -192,27 +192,32 @@ impl Dihedrals for Peptide {
 
     fn print_to_stdout(&self, flag : Flags) {
 
-        let range = if flag.twopi {
-            [0., 360.]
-        } else {
-            [-180., 180.]
-        }; 
-
-        let axis = BackboneCoordinates::new(range[0], range[1], flag.num as usize);
+        let axis = BackboneCoordinates::new(flag.num as usize);
 
         let _sizeof: usize = flag.num as usize * flag.num as usize;
         let num_f64 = flag.num as f64;
         let mut x : f64;
         let mut y : f64;
 
-        println!("# ALPHA  ZETA    X     Y");
+        println!("{} {} {} {}", // header
+                 "#      PHI",
+                 "       PSI",
+                 "         X",
+                 "         Y"
+                 );
+
         for i in 0.._sizeof {
 
             x = (i as f64 / num_f64).floor(); 
             y = i as f64 % num_f64; 
 
-            println!("{:4.3} {:4.3} {:4.3} {:4.3}", self.phi[i], self.psi[i], axis.x[x as usize], axis.y[y as usize])
-        }
+            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                     self.phi[i],
+                     self.psi[i],
+                     axis.x[x as usize],
+                     axis.y[y as usize],
+                     width=10, precision=3)
+            }
     }
 
 }
@@ -226,15 +231,24 @@ impl Dihedrals for Furanose {
         let mut y : f64;
         let num_f64 : f64 = flag.num as f64;
 
+        println!("{} {} {} {}", // header
+                 "#      NU1",
+                 "       NU3",
+                 "        Zx",
+                 "        Zy"
+                 );
 
-
-        println!("# NU1  NU3  Zx  Zy");
         for i in 0.._sizeof {
 
             x = (i as f64 / num_f64).floor();
             y = i as f64 % num_f64; 
 
-            println!("{:4.3} {:4.3} {:4.3} {:4.3}", self.nu1[i], self.nu3[i], axis.zx[x as usize], axis.zy[y as usize])
+            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                     self.nu1[i],
+                     self.nu3[i],
+                     axis.zx[x as usize],
+                     axis.zy[y as usize],
+                     width=10, precision=3)
         }
     }
 }
@@ -245,12 +259,25 @@ impl Dihedrals for Pyranose {
 
         let mut it: usize = 0;
 
-        println!("# ALPHA1  ALPHA2  ALPHA3  RHO  THETA  PHI");
+        println!("{} {} {} {} {} {}", // header
+                 "#   ALPHA1",
+                 "    ALPHA2",
+                 "    ALPHA3",
+                 "       RHO",
+                 "     THETA",
+                 "       PHI",
+                 );
         for i in 0..axis.amount {
             if (axis.phi[i] == 0.0) && i != 0 { it += 1 }
 
-            println!("{:4.3} {:4.3} {:4.3} {:4.3} {:4.3} {:4.3}", self.alpha1[i], self.alpha2[i], self.alpha3[i], 
-                     axis.rho, axis.theta[it], axis.phi[i])
+            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                     self.alpha1[i],
+                     self.alpha2[i],
+                     self.alpha3[i], 
+                     axis.rho,
+                     axis.theta[it],
+                     axis.phi[i],
+                     width=10, precision=3)
         }
     }
 }

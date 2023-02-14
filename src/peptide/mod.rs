@@ -7,18 +7,10 @@ use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals};
 
 
 pub fn peptide(flags: &Flags) ->Box<dyn Dihedrals> {
-//pub fn peptide(flags: Flags) -> (Box<&'static Peptide>, Box<&'static BackboneCoordinates>) {
-    // let the variable torsions return as a set of dihedrals
-    // State at which range we want to generate the arrays
-    let range = if flags.twopi {
-        [0., 360.]
-    } else {
-        [-180., 180.]
-    }; 
 
     let _sizeof : u64 = flags.num * flags.num;
 
-    let bb = BackboneCoordinates::new(range[0], range[1], flags.num as usize);
+    let bb = BackboneCoordinates::new(flags.num as usize);
 
     let mut p = Peptide::new(_sizeof as usize);
     
