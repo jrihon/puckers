@@ -178,6 +178,13 @@ pub trait Dihedrals {
     // extra time to calculate, but negligible
     // In all fairness, it is probably better this way, as here we can allow mutation of the
     // axes, whereas with a trait object I am not all too certain.
+    //
+    // https://docs.rs/float-pretty-print/latest/src/float_pretty_print/lib.rs.html#48
+    // This is a lib to pretty print stuff.
+    // I'll mention I took it from here, but I just want to do it manually myself
+    //
+    // A pound sign is added at the start of the column-header line (line 0), to make it 
+    // easily parseable from numpy or shell
 
 }
 
@@ -198,7 +205,7 @@ impl Dihedrals for Peptide {
         let mut x : f64;
         let mut y : f64;
 
-        println!("ALPHA  ZETA    X     Y");
+        println!("# ALPHA  ZETA    X     Y");
         for i in 0.._sizeof {
 
             x = (i as f64 / num_f64).floor(); 
@@ -221,7 +228,7 @@ impl Dihedrals for Furanose {
 
 
 
-        println!("NU1  NU3  Zx  Zy");
+        println!("# NU1  NU3  Zx  Zy");
         for i in 0.._sizeof {
 
             x = (i as f64 / num_f64).floor();
@@ -238,7 +245,7 @@ impl Dihedrals for Pyranose {
 
         let mut it: usize = 0;
 
-        println!("ALPHA1  ALPHA2  ALPHA3  RHO  THETA  PHI");
+        println!("# ALPHA1  ALPHA2  ALPHA3  RHO  THETA  PHI");
         for i in 0..axis.amount {
             if (axis.phi[i] == 0.0) && i != 0 { it += 1 }
 

@@ -1,5 +1,4 @@
-# Under Active Development
-# Torsions
+# Puckers
 
 A program to generate dihedral values in order to perform conformational sampling on : 
  - peptide-like molecules (or any set of two torsion angles),
@@ -9,7 +8,7 @@ A program to generate dihedral values in order to perform conformational samplin
 ### Usage
 
 ```
-Torsions help menu :
+Puckers help menu :
             --peptide NUM : to generate torsion angles for peptide-like systems
             --fivering NUM : to generate torsion angles for five-membered ring systems
             --sixring NUM : to generate torsion angles for six-membered ring systems
@@ -35,15 +34,15 @@ The flag `--rad` is used to convert all torsion angles from degrees to radians.
 
 ### Example
 ``` 
-$ torsions --fivering 21 --rad
-$ torsions --peptide 37 --twopi 
-$ torsions --sixring 630 
+$ puckers --fivering 21 --rad
+$ puckers --peptide 37 --twopi 
+$ puckers --sixring 630 
 ```
 
 
 
 ### Installation
 ```shell
-$ cd path/to/torsions
+$ cd path/to/puckers
 $ cd cargo install --path .
 ```

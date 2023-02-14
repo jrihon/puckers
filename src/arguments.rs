@@ -9,17 +9,17 @@ pub struct Flags {
     pub num : u64,
     pub rad : bool,
     pub axis : bool,
-    pub twopi : bool,
+//    pub twopi : bool,
 }
 
 // Implemented amount of methods : 2
 impl Flags {
-    fn new() -> Flags{ //torsions : String, intv : usize
+    fn new() -> Flags{ 
         Flags {
             torsion_type : None, // converts &str type to String type
             rad : false,
             axis : false,
-            twopi : false,
+//            twopi : false,
             num : 0
         }
     
@@ -71,8 +71,8 @@ impl Flags {
                 flag.rad = true 
             } else if arg == "--axis" {
                 flag.axis = true 
-            } else if arg == "--twopi" {
-                flag.twopi = true 
+//            } else if arg == "--twopi" {
+//                flag.twopi = true 
             } else if arg.parse::<u64>().is_ok() {
             } else {
                 panic!("`{}` is not a valid argument.", arg)
@@ -98,14 +98,13 @@ fn num_not_prompted_correctly() -> u64 {
 
 fn print_help() {
     println!(
-        "Torsions help menu :
+        "Puckers help menu :
        --peptide NUM : to generate torsion angles for peptide-like systems
        --fivering NUM : to generate torsion angles for five-membered ring systems
        --sixring NUM : to generate torsion angles for six-membered ring systems
        \n
        --rad : to convert torsion angles from degrees (default) to radians
        --axis : print out axes alongside the torsion angles
-       --twopi : to convert torsion angles from [-180,180] (default) to [0,360]
        \n
        -h or --help to print this menu. "
         );

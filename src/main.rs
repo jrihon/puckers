@@ -43,11 +43,10 @@ fn main() {
     let flags = Flags::return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
     // get the torsion angles and the axes
-    let torsions = run(&flags);
+    let puckers = run(&flags);
 
     // Print the results
-    torsions.print_to_stdout(flags);
-//    Deref::deref(&torsions).print_to_stdout(flags);
+    puckers.print_to_stdout(flags);
 }
 
 

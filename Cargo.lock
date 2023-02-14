@@ -133,6 +133,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "puckers"
+version = "0.8.0"
+dependencies = [
+ "assert_float_eq",
+ "nalgebra",
+ "ndarray",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -178,15 +187,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "torsions"
-version = "0.8.0"
-dependencies = [
- "assert_float_eq",
- "nalgebra",
- "ndarray",
 ]
 
 [[package]]

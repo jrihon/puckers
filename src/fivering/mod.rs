@@ -9,10 +9,8 @@ use crate::torsion_typing::{Furanose, FurCoords, Dihedrals};
 pub fn fivering(flags : &Flags) -> Box<dyn Dihedrals> {
     
     // Derive torsion angles from the given axes
-    
     let polars = FurCoords::new(flags.num as usize);
-//    let ax1 : Array1<f64> = Array1::linspace(-60., 60., flags.num as usize);
-//    let ax2 = ax1.clone();
+
     // Setup variable
     let _sizeof : u64 = flags.num * flags.num;
     let num_f64 : f64 = flags.num as f64;
@@ -22,7 +20,7 @@ pub fn fivering(flags : &Flags) -> Box<dyn Dihedrals> {
     let denominator_x : f64 = 2. * FOURPIOVERFIVE.cos();
     let denominator_y : f64 = 2. * FOURPIOVERFIVE.sin();
 
-    // Initialise Torsions struct
+    // Instance Furanose struct
     let mut f = Furanose::new(_sizeof as usize);
 
     let mut x : f64;
