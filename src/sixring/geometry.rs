@@ -25,6 +25,7 @@ pub trait LinAlg {
     fn dot_product(&self, rhs : &Coordinate) -> f64;
     fn cross_product(&self, rhs : &Coordinate) -> DirectionAxis;
     fn subtract_arr(&self, rhs : &Coordinate) -> Coordinate;
+    fn add_arr(&self, rhs : &Coordinate) -> Coordinate;
     fn normalise_vector(&self) -> Coordinate;
     fn norm(&self) -> f64;
     fn scale_vector(&self, factor: f64) -> Coordinate;
@@ -53,6 +54,11 @@ impl LinAlg for Coordinate {
     /// Subtract one Coordinate from another
     fn subtract_arr(&self, rhs : &Coordinate) -> Coordinate {
         [ self[0] - rhs[0], self[1] - rhs[1], self[2] - rhs[2] ]
+    }
+    ///
+    /// Add one Coordinate from another
+    fn add_arr(&self, rhs : &Coordinate) -> Coordinate {
+        [ self[0] + rhs[0], self[1] + rhs[1], self[2] + rhs[2] ]
     }
 
     /// -> sqrt(x² + y² + z²)
@@ -125,6 +131,16 @@ pub fn normalise_vector(c : Coordinate) -> Coordinate {
 
     c.map(|x: f64| d * x) // apply the factor `d` to all elements of the coordinate
 }
+
+/// Since we can't perform operator overloading on primitive types (because we do not own them, see Rust's Orphan Rule)
+/// , we have to make do with a small function to allow for operations on array-types
+///
+/// Wrapping the array-type in a struct and then doing overloading on that struct
+/// would makes all the other uses of the Coordinate type in this program very ugly
+pub fn subtract_arr(a : Coordinate, b : Coordinate) -> Coordinate {
+    [ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]
+}
+
 
 /// Calculate the dihedral between four Coordinate points
 /// A dihedral is an angle between four points.
@@ -210,16 +226,6 @@ impl RotMatrix for RotationMatrix {
         }
 }
 
-/// Since we can't perform operator overloading on primitive types (because we do not own them, see Rust's Orphan Rule)
-/// , we have to make do with a small function to allow for operations on array-types
-///
-/// Wrapping the array-type in a struct and then doing overloading on that struct
-/// would makes all the other uses of the Coordinate type in this program very ugly
-pub fn subtract_arr(a : Coordinate, b : Coordinate) -> Coordinate {
-    [ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]
-}
-
-
 
 #[cfg(test)]
 mod test_linalg {
@@ -259,6 +265,17 @@ mod test_linalg {
                         );
         // assert up until the 3rd decimal
         assert_float_absolute_eq!(chi, -130.214, 0.001)
+    }
+
+    #[test]
+    pub fn subtract_points() {
+
+        let a = [1., 2., 3.];
+        let b = [4., 5., 6.];
+
+        let c = subtract_arr(b, a);
+        assert_float_absolute_eq!(c.iter().sum::<f64>(), [3., 3., 3.,].iter().sum::<f64>(), 0.001)
+
     }
 
 }

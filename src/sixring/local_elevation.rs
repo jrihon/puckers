@@ -25,6 +25,11 @@
 ///     one_over_sqrt_six   = 1 / sqrt(6)
 ///
 ///
+///
+///
+/// -------
+/// LOCAL ELEVATION HAS BEEN CHECKED AND DEEMED CORRECT !
+/// -------
 
 // imports
 use ndarray::Array2;
@@ -61,7 +66,7 @@ pub fn cremerpople_evelation(sphere : &SphericalCoordinates) -> Array2<f64> {
 
         for j in 0..Z_SIZE {
             z[[i, j]] = calculate_local_elevation(sphere.rho, sphere.theta[idx_theta], sphere.phi[i], constant1[j], constant2[j],
-                                                  one_over_sqrt_three, one_over_sqrt_six)
+                                                  one_over_sqrt_three, one_over_sqrt_six);
         }
     }
 

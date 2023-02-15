@@ -78,9 +78,9 @@ where
                 
             };
 
-            op_arr[i] = (( rpij_arr[[i,0]].powi(2) + rpij_arr[[i,1]].powi(2) ) - (rpij_arr[[i,0]] * rpij_arr[[i,1]] * cospb_arr[[i, 0]])).sqrt();
-            qp_arr[i] = (( rpij_arr[[i,2]].powi(2) + rpij_arr[[i,3]].powi(2) ) - (rpij_arr[[i,2]] * rpij_arr[[i,3]] * cospb_arr[[i, 2]])).sqrt();
-            oq_arr[i] = (( rpij_arr[[i,4]].powi(2) + rpij_arr[[i,5]].powi(2) ) - (rpij_arr[[i,4]] * rpij_arr[[i,5]] * cospb_arr[[i, 4]])).sqrt();
+            op_arr[i] = (( rpij_arr[[i,0]].powi(2) + rpij_arr[[i,1]].powi(2) ) - (2. * rpij_arr[[i,0]] * rpij_arr[[i,1]] * cospb_arr[[i, 0]])).sqrt();
+            qp_arr[i] = (( rpij_arr[[i,2]].powi(2) + rpij_arr[[i,3]].powi(2) ) - (2. * rpij_arr[[i,2]] * rpij_arr[[i,3]] * cospb_arr[[i, 2]])).sqrt();
+            oq_arr[i] = (( rpij_arr[[i,4]].powi(2) + rpij_arr[[i,5]].powi(2) ) - (2. * rpij_arr[[i,4]] * rpij_arr[[i,5]] * cospb_arr[[i, 4]])).sqrt();
 
         }
 

@@ -5,7 +5,7 @@ use crate::sixring::ring_partition::ProjectionPartition;
 use crate::sixring::geometry::{Coordinate,
                                 RotMatrix,
                                 RotationMatrix,
-                                subtract_arr};
+                                subtract_arr, LinAlg};
 
 
 /// Since we work it large array sizes, depending on the query sizes, 
@@ -75,6 +75,7 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
 
     for i in 0..sphere_size {
 
+//        println!("{}, {}, {}", proj.op[i], proj.qp[i], proj.oq[i]);
 
         // Add the local evelation already as the z-coordinate to the final molecule's array
         let mut sixring = SixRingAtoms {
@@ -99,7 +100,6 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         //	S31[0] = 0.;	S31[1] = 0.;
         //
         //
-        // NaN value in s13.y , s23.y , s35.y , which is likely attributed to sinpbijk
         let pyranose = PointPositions {
                 s11 : 
                     [0.,
@@ -110,11 +110,11 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
                      0.,
                      0.],
                 s13 : 
-                    [-proj.rpij[[i,0]] + proj.rpij[[i,1]] * proj.cosbpijk[[i,0]],
+                    [(-proj.rpij[[i,0]]) + (proj.rpij[[i,1]] * proj.cosbpijk[[i,0]]),
                      proj.rpij[[i,1]] * proj.sinbpijk[[i,0]],
                      0.],
                 s23 : 
-                    [proj.oq[i] + proj.rpij[[i,3]] - proj.rpij[[i,2]] * proj.cosbpijk[[i,2]],
+                    [(proj.oq[i] + proj.rpij[[i,3]]) - (proj.rpij[[i,2]] * proj.cosbpijk[[i,2]]),
                      proj.rpij[[i,2]] * proj.sinbpijk[[i,2]],
                      0.],
                 s24 : 
@@ -126,7 +126,7 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
                      0.,
                      0.],
                 s35 : 
-                    [proj.rpij[[i,5]] - proj.rpij[[i,4]] * proj.cosbpijk[[i,4]],
+                    [proj.rpij[[i,5]] - (proj.rpij[[i,4]] * proj.cosbpijk[[i,4]]),
                      proj.rpij[[i,4]] * proj.sinbpijk[[i,4]],
                      0.],
                 s36 :
@@ -145,6 +145,7 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         let rho1 = pyranose.s13[1].atan2(pyranose.s13[0]);
         let rho2 = pyranose.s23[1].atan2(pyranose.s23[0] - proj.oq[i]);
         let rho3 = pyranose.s35[1].atan2(pyranose.s35[0]);
+//        println!("{} {} {}", rho1, rho2, rho3); // here everything is fine
 
         //	pO[0] = 0.;	pO[1] = 0.;
         //	pP[0] = (OP*OP+OQ*OQ-QP*QP)/(2.*OQ);
@@ -160,25 +161,31 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
                                 0.,
                                 0.]; //pO
         let p_p : Coordinate = [(proj.op[i].powi(2) + proj.oq[i].powi(2) - proj.qp[i].powi(2))/(2. * proj.oq[i]),
-                                (proj.op[i].powi(2) - ( ( (proj.op[i].powi(2) + proj.oq[i].powi(2) - proj.qp[i].powi(2)).powi(2) ) / (4. * proj.op[i]) ) ).sqrt(),
+                                (proj.op[i].powi(2) - ( ( (proj.op[i].powi(2) + proj.oq[i].powi(2) - proj.qp[i].powi(2)).powi(2) ) / (4. * proj.op[i].powi(2)) ) ).sqrt(),
                                 0.]; //pP
-        let p_q : Coordinate = [proj.op[i],
+        let p_q : Coordinate = [proj.oq[i],
                                 0.,
                                 0.]; //pQ
 
-        let rho_ps1 = p_p[1].atan2(p_q[0]);
-        let rho_ps2 = p_p[1].atan2(p_q[0] - proj.oq[i]);
+//        println!("{:?}", p_o); 
+//        println!("{:?}", p_p); 
+//        println!("{:?}", p_q); 
+//      rhoPS1 = atan2(pP[1],pP[0]);
+//	    rhoPS2 = atan2(pP[1],pP[0]-OQ);
+        let rho_ps1 = p_p[1].atan2(p_p[0]);
+        let rho_ps2 = p_p[1].atan2(p_p[0] - proj.oq[i]);
 
         let sigma1 = rho1 - rho_ps1;
         let sigma2 = rho_ps2 - rho2;
         let sigma3 = rho3;
+//        println!("{} {} {}", sigma1, sigma2, sigma3); //sigma3 is correct, the rest is not
 
         // p1, p3, p5 already exist on the xy'-plane, so need only to rotate p2,p4,p6
         let tmp_sixring = SixRingAtoms {
             p1 : p_o,
             p2 : RotationMatrix::new(-sigma1).apply_rotation(pyranose.s12),
             p3 : p_p,
-            p4 : RotationMatrix::new(sigma2).apply_rotation(subtract_arr(pyranose.s24, p_q)),
+            p4 : RotationMatrix::new(sigma2).apply_rotation(subtract_arr(pyranose.s24, p_q)).add_arr(&p_q),
             p5 : p_q,
             p6 : RotationMatrix::new(-sigma3).apply_rotation(pyranose.s36),
         };
@@ -205,6 +212,7 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         sixring.p6[1] = rot4.apply_rotation_around_g(subtract_arr(tmp_sixring.p6, p_g), 1);
 
 
+//        println!("{:?}", sixring);
         pyranosecoordinates.push(sixring);
     }
 
