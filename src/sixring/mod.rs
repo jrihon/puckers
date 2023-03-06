@@ -13,9 +13,6 @@ use crate::sixring::ring_partition::RingPartition;
 
 use geometry::dihedral;
 
-//const PI_DEG : f64 = 180.;
-
-
 
 /// Calculate possible sampling space (spherical coordinates)
 pub fn sixring(flags: &Flags) -> Box<dyn Dihedrals> {
@@ -34,11 +31,12 @@ pub fn sixring(flags: &Flags) -> Box<dyn Dihedrals> {
                             );
 
     for (i, pyr) in vec_of_pyranoses.iter().enumerate() {
-        p.alpha1[i] = dihedral(pyr.p5, pyr.p1, pyr.p3, pyr.p2);// - PI_DEG;
-        p.alpha2[i] = dihedral(pyr.p1, pyr.p3, pyr.p5, pyr.p4);// - PI_DEG;
-        p.alpha3[i] = dihedral(pyr.p3, pyr.p5, pyr.p1, pyr.p6);// - PI_DEG;
+        p.alpha1[i] = dihedral(pyr.p5, pyr.p1, pyr.p3, pyr.p2);
+        p.alpha2[i] = dihedral(pyr.p1, pyr.p3, pyr.p5, pyr.p4);
+        p.alpha3[i] = dihedral(pyr.p3, pyr.p5, pyr.p1, pyr.p6);
     }
 
 
+    // Dihedral function has values ORCA-ready
     Box::new(p)
 }

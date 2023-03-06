@@ -5,7 +5,7 @@
 ///     six-membered/pyranose rings.
 ///
 ///
-/// License   : MIT License
+/// License   : GPL2 License
 /// Author    : Jérôme Rihon
 /// Institute : Rega Institute for Medical Research, Katholieke Universiteit Leuven.
 ///             Leuven 3000, Belgium.
@@ -42,7 +42,7 @@ fn main() {
     // We can actually use the clap crate, but I wanted to do it manually to get a feel for Rust
     let flags = Flags::return_cli_arguments(args); // return CLI arguments in a convenient Struct
 
-    // get the torsion angles and the axes
+    // get the torsion angles
     let puckers = run(&flags);
 
     // Print the results

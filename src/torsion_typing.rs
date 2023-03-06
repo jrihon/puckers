@@ -1,8 +1,13 @@
+#![allow(dead_code)]
+use std::f64::consts::PI;
 use ndarray::Array1;
 
 use crate::arguments::Flags;
 use crate::sixring::equidistance_sphere::equidistance_sphere;
 
+const TO_RAD: f64 = PI / 180.;
+const TO_DEG: f64 = 180. / PI ;
+const TWOPI: f64 = 2. * PI;
 // Which torsion type is going to be calculated
 //#[derive(Debug, Clone)]
 pub enum TorsionType {
@@ -25,16 +30,19 @@ pub enum TorsionType {
 ///
 
 /// the `phi-psi` dihedrals, which are the peptide backbone dihedrals in proteins
+/// public `phi` field : Array1<f64>
+/// public `psi` field : Array1<f64>
 pub struct Peptide {
     pub phi : Array1<f64>,
     pub psi : Array1<f64>,
 }
 
 impl Peptide {
-    pub fn new(_sizeof : usize) -> Peptide {
+    /// Initialise the struct with a near-empty array
+    pub fn new(amount : usize) -> Peptide {
         Peptide {
-            phi : Array1::zeros(_sizeof),
-            psi : Array1::zeros(_sizeof),
+            phi : Array1::zeros(amount),
+            psi : Array1::zeros(amount),
         }
     }
 }
@@ -42,16 +50,19 @@ impl Peptide {
 
 
 /// the `nu` dihedrals, according to the IUPAC nomenclature convention
+/// public `nu1` field : Array1<f64>
+/// public `nu3` field : Array1<f64>
 pub struct Furanose {
     pub nu1 : Array1<f64>,
     pub nu3 : Array1<f64>,
 }
 
 impl Furanose {
-    pub fn new(_sizeof : usize) -> Furanose {
+    /// Initialise the struct with a near-empty array
+    pub fn new(amount : usize) -> Furanose {
         Furanose {
-            nu1 : Array1::zeros(_sizeof),
-            nu3 : Array1::zeros(_sizeof),
+            nu1 : Array1::zeros(amount),
+            nu3 : Array1::zeros(amount),
         }
     }
 }
@@ -60,6 +71,9 @@ impl Furanose {
 
 
 /// the `alpha` dihedrals according to the Strauss-Piccket (SP) pyranose puckering formalism
+/// public `alpha1` field : Array1<f64>
+/// public `alpha2` field : Array1<f64>
+/// public `alpha3` field : Array1<f64>
 pub struct Pyranose {
     pub alpha1 : Array1<f64>,
     pub alpha2 : Array1<f64>,
@@ -67,6 +81,7 @@ pub struct Pyranose {
 }
 
 impl Pyranose {
+    /// Initialise the struct with a near-empty array
     pub fn new(sphere_size : usize) -> Pyranose {
          Pyranose {
             alpha1 : Array1::zeros(sphere_size),
@@ -76,6 +91,11 @@ impl Pyranose {
     }
 }
 
+/// The axes to iterate over for peptide-like molecules : 
+/// Its extent is : [0 , 2pi] (rad)
+/// Its extent is : [0 , 360] (degrees)
+/// public `x` field : Array1<f64>
+/// public `y` field : Array1<f64>
 pub struct BackboneCoordinates {
     pub x : Array1<f64>,
     pub y : Array1<f64>,
@@ -83,6 +103,7 @@ pub struct BackboneCoordinates {
 }
 
 impl BackboneCoordinates {
+    /// Initialise the struct with a near-empty array
     pub fn new(num: usize) -> BackboneCoordinates {
         BackboneCoordinates {
             x: Array1::linspace(0., 360., num),
@@ -91,6 +112,10 @@ impl BackboneCoordinates {
     }
 }
 
+/// The axes to iterate over for fivering molecules : 
+/// Its extent is : [-60, 60]
+/// public `zx` field : Array1<f64>
+/// public `zy` field : Array1<f64>
 pub struct FurCoords {
     pub zx : Array1<f64>,
     pub zy : Array1<f64>,
@@ -98,6 +123,7 @@ pub struct FurCoords {
 }
 
 impl FurCoords {
+    /// Initialise the struct with a near-empty array
     pub fn new(num: usize) -> FurCoords {
         FurCoords {
             zx: Array1::linspace(-60., 60., num),
@@ -109,11 +135,12 @@ impl FurCoords {
 }
 
 
-#[derive(Debug)]
+/// The axes to iterate over for sixring molecules : 
+/// public `rho` field : f64 . Standard value of 0.67
+/// public `theta` field : Array1<f64>. [0, pi] or [0, 180]
+/// public `phi` field : Array1<f64>. [0, 2pi] or [0, 360]
+/// public `amount` field : Array1<f64>. The corrected amount of points to sample
 pub struct SphericalCoordinates {
-//    pub x : Array1<f64>,
-//    pub y : Array1<f64>,
-//    pub z : Array1<f64>,
     pub rho : f64,
     pub theta : Array1<f64>,
     pub phi : Array1<f64>,
@@ -122,69 +149,39 @@ pub struct SphericalCoordinates {
 
 
 impl SphericalCoordinates {
-    pub fn new(num: usize, m_theta : usize, rhoo: f64) -> SphericalCoordinates {
+    pub fn new(amount: usize, m_theta : usize, rho: f64) -> SphericalCoordinates {
         SphericalCoordinates {
-//            x : Array1::<f64>::zeros(num),
-//            y : Array1::<f64>::zeros(num),
-//            z : Array1::<f64>::zeros(num),
-            rho : rhoo,
+            rho, // shorthand initialisation
             theta : Array1::<f64>::zeros(m_theta),
-            phi : Array1::<f64>::zeros(num),
-            amount : num,
+            phi : Array1::<f64>::zeros(amount),
+            amount // shorthand initialisation
         }
     }
-
-//    pub fn polar_to_cartesian(&mut self, i : usize, m : usize) {
-//        self.x[i] = self.rho * self.theta[m].sin() * self.phi[i].cos();
-//        self.y[i] = self.rho * self.theta[m].sin() * self.phi[i].sin();
-//        self.z[i] = self.rho * self.theta[m].cos();     
-//    }
 }
 
 
 
-/// Implement it on all structs that hold torsion types (dynamic dispatching)
-
-/// NOTE: 
-/// Ok, this is what we do !
 /// We implement the print to output method signature on Dihedrals, 
 /// which will be implemented on Peptide, Furanose and Pyranose
-/// Then, we can pass in the axis and the flags as arguments to the method
-/// like so :
-/// impl Dihedrals for Pyranose {
-///     pub fn print_to_stdout(self, axes: impl Axes, flags: Flags) -> () {
 ///
-///         if flags.twopi {}
-///         if flags.rad {}
-///         if flags.axis {}
 ///
-///         for i in iterate {
-///             println!("{}", self.rho, self.theta, self.phi)
-///         }
+/// Design a trait to allow for dynamic dispatching of the torsion angles.
+/// With this, we can then call the `self.print_to_stdout()` method on any of the 
+/// torsion angle structs (Peptide, Furanose, Pyranose) and use it.
 ///
-///     }
-/// }
-
+/// This eases our work and while we call one function, it behaves differently for every struct 
+/// (which is essentially the concept of these trait objects)
+///
 pub trait Dihedrals {
+
+    /// We pretty print the output with the use of the following library :
+    /// https://docs.rs/float-pretty-print/latest/src/float_pretty_print/lib.rs.html#48
+    /// I did not want to `use` it, but went through the src code to get exactly what I wanted.
+    ///
+    /// Additionally, a `#` pound symbol is added by on the first line, to act as a comment symbol 
+    /// for when one wants to easily parse it through numpy, shell scripts or as an easy
+    /// identifier.
     fn print_to_stdout(&self, flag : Flags);
-    // the problem with this program is that we want to return the axis alongside the torsion
-    // angles
-    // since we had to return the axes as trait object, we cannot access its field
-    // as they are unknown and therefor the compiler cannot guarantee it is there.
-    // Technically, this could work with an unsafe block, but I feel that is unreasonable.
-    //
-    // The alternative is to recalculate the entire axis, which is what I'll do.
-    // Not the best, but definitely not the worst idea. It is probably a couple extra milliseconds
-    // extra time to calculate, but negligible
-    // In all fairness, it is probably better this way, as here we can allow mutation of the
-    // axes, whereas with a trait object I am not all too certain.
-    //
-    // https://docs.rs/float-pretty-print/latest/src/float_pretty_print/lib.rs.html#48
-    // This is a lib to pretty print stuff.
-    // I'll mention I took it from here, but I just want to do it manually myself
-    //
-    // A pound sign is added at the start of the column-header line (line 0), to make it 
-    // easily parseable from numpy or shell
 
 }
 
@@ -192,9 +189,17 @@ impl Dihedrals for Peptide {
 
     fn print_to_stdout(&self, flag : Flags) {
 
-        let axis = BackboneCoordinates::new(flag.num as usize);
+        let mut axis = BackboneCoordinates::new(flag.num as usize);
 
-        let _sizeof: usize = flag.num as usize * flag.num as usize;
+
+        // if we want to print to radians instead of degrees
+        if flag.rad {
+            axis.x = axis.x.iter().map(|x| x * TO_RAD).collect::<Array1<f64>>();
+            axis.y = axis.y.iter().map(|y| y * TO_RAD).collect::<Array1<f64>>();
+        };
+
+
+        let amount: usize = flag.num as usize * flag.num as usize;
         let num_f64 = flag.num as f64;
         let mut x : f64;
         let mut y : f64;
@@ -206,7 +211,7 @@ impl Dihedrals for Peptide {
                  "         Y"
                  );
 
-        for i in 0.._sizeof {
+        for i in 0..amount {
 
             x = (i as f64 / num_f64).floor(); 
             y = i as f64 % num_f64; 
@@ -224,38 +229,97 @@ impl Dihedrals for Peptide {
 impl Dihedrals for Furanose {
 
     fn print_to_stdout(&self, flag : Flags) {
-        let _sizeof: usize = flag.num as usize * flag.num as usize;
+        let amount: usize = flag.num as usize * flag.num as usize;
 
-        let axis = FurCoords::new(flag.num as usize);
-        let mut x : f64;
-        let mut y : f64;
+        let mut axis = FurCoords::new(flag.num as usize);
         let num_f64 : f64 = flag.num as f64;
 
-        println!("{} {} {} {}", // header
-                 "#      NU1",
-                 "       NU3",
-                 "        Zx",
-                 "        Zy"
-                 );
 
-        for i in 0.._sizeof {
+        // output the values as the conformation's polar coordinate, Altona Sundaralingham
+        if flag.rad {
 
-            x = (i as f64 / num_f64).floor();
-            y = i as f64 % num_f64; 
+            let mut x : f64;
+            let mut y : f64;
+            let mut zx : f64;
+            let mut zy : f64;
+            let mut ampl = Array1::<f64>::zeros(amount);
+            let mut phase = Array1::<f64>::zeros(amount);
+            for i in 0..amount {
+                x = (i as f64 / num_f64).floor();
+                y = i as f64 % num_f64; 
 
-            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
-                     self.nu1[i],
-                     self.nu3[i],
-                     axis.zx[x as usize],
-                     axis.zy[y as usize],
-                     width=10, precision=3)
+                if axis.zx[x as usize] < 0. {
+                    zx = (&axis.zx[x as usize] + 360.) * TO_RAD
+                } else {
+                    zx = &axis.zx[x as usize] * TO_RAD
+                };
+                if axis.zy[y as usize] < 0. {
+                    zy = (&axis.zy[y as usize] + 360.) * TO_RAD
+                } else {
+                    zy = &axis.zy[y as usize] * TO_RAD
+                };
+
+                ampl[i] = (zx.powi(2) + zy.powi(2)).sqrt(); // amplitude rho
+                phase[i] = (zy).atan2(zx);
+            }
+            axis.zx = ampl;
+            axis.zy = phase;
+            println!("{} {} {} {}", // header
+                     "#      NU1",
+                     "       NU3",
+                     " AMPLITUDE",
+                     "     PHASE"
+                     );
+            
+            for i in 0..amount {
+
+                println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                         self.nu1[i],
+                         self.nu3[i],
+                         axis.zx[i],
+                         axis.zy[i],
+                         width=10, precision=3)
+            }
+
+        } else {
+            println!("{} {} {} {}", // header
+                     "#      NU1",
+                     "       NU3",
+                     "        Zx",
+                     "        Zy"
+                     );
+
+            let mut x : f64;
+            let mut y : f64;
+
+            for i in 0..amount {
+
+                x = (i as f64 / num_f64).floor();
+                y = i as f64 % num_f64; 
+
+                println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                         self.nu1[i],
+                         self.nu3[i],
+                         axis.zx[x as usize],
+                         axis.zy[y as usize],
+                         width=10, precision=3)
+            }
+
         }
     }
 }
+
 impl Dihedrals for Pyranose {
     fn print_to_stdout(&self, flag : Flags) {
 
-        let axis = equidistance_sphere(flag.num);
+        let mut axis = equidistance_sphere(flag.num);
+
+        // if the --rad flag was not prompted, since we already have the accessed as spherical
+        // coordinates
+        if !flag.rad {
+            axis.theta = axis.theta.iter().map(|theta| theta * TO_DEG).collect::<Array1<f64>>();
+            axisphi = axis.phi.iter().map(|phi| phi * TO_DEG).collect::<Array1<f64>>();
+        };
 
         let mut it: usize = 0;
 
@@ -281,12 +345,3 @@ impl Dihedrals for Pyranose {
         }
     }
 }
-
-
-
-/// Implement it on all structs that axes (dynamic dispatching)
-pub trait Axis {}
-
-impl Axis for BackboneCoordinates {}
-impl Axis for FurCoords {}
-impl Axis for SphericalCoordinates {}

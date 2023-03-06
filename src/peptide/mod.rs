@@ -1,22 +1,18 @@
-//use ndarray::Array1;
-
-// Use own libs
 use crate::arguments::Flags;
 use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals};
 
-
-
+/// Generate the torsion angles to use as restraints for peptide-like molecules
 pub fn peptide(flags: &Flags) ->Box<dyn Dihedrals> {
 
-    let _sizeof : u64 = flags.num * flags.num;
+    let amount : u64 = flags.num * flags.num;
 
     let bb = BackboneCoordinates::new(flags.num as usize);
 
-    let mut p = Peptide::new(_sizeof as usize);
+    let mut p = Peptide::new(amount as usize);
     
     let mut x : f64;
     let mut y : f64;
-    for i in 0.._sizeof as usize {
+    for i in 0..amount as usize {
 
         // For every x value, return all y values
         x = (i as f64 / flags.num as f64).floor(); // floor, to return x axis value
@@ -27,5 +23,6 @@ pub fn peptide(flags: &Flags) ->Box<dyn Dihedrals> {
         p.psi[i as usize] = bb.y[y as usize]; 
     }
 
+    // Values are ORCA-ready
     Box::new(p)
 }

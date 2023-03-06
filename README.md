@@ -1,4 +1,4 @@
-# Puckers
+# Pucke.rs
 
 A program to generate dihedral values in order to perform conformational sampling on : 
  - peptide-like molecules (or any set of two torsion angles),
@@ -8,7 +8,7 @@ A program to generate dihedral values in order to perform conformational samplin
 ### Usage
 
 ```
-Puckers help menu :
+Pucke.rs help menu :
             --peptide NUM : to generate torsion angles for peptide-like systems
             --fivering NUM : to generate torsion angles for five-membered ring systems
             --sixring NUM : to generate torsion angles for six-membered ring systems
