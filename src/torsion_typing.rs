@@ -318,7 +318,7 @@ impl Dihedrals for Pyranose {
         // coordinates
         if !flag.rad {
             axis.theta = axis.theta.iter().map(|theta| theta * TO_DEG).collect::<Array1<f64>>();
-            axisphi = axis.phi.iter().map(|phi| phi * TO_DEG).collect::<Array1<f64>>();
+            axis.phi = axis.phi.iter().map(|phi| phi * TO_DEG).collect::<Array1<f64>>();
         };
 
         let mut it: usize = 0;

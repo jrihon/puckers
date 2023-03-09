@@ -43,6 +43,12 @@ $ puckers --sixring 630
 
 ### Installation
 ```shell
+# Download the repository anywhere on your system
+$ git clone https://github.com/jrihon/puckers.git
+
+# Go to the directory where the repository is installed on your system
 $ cd path/to/puckers
-$ cd cargo install --path .
+
+# Install using the Rust's cargo tool
+$ cargo install --path .
 ```
