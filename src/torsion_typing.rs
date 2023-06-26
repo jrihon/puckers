@@ -10,6 +10,7 @@ const TO_DEG: f64 = 180. / PI ;
 const TWOPI: f64 = 2. * PI;
 // Which torsion type is going to be calculated
 //#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum TorsionType {
     Backbone,
     Fivering,
