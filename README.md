@@ -12,13 +12,8 @@ Pucke.rs help menu :
             --peptide NUM : to generate torsion angles for peptide-like systems
             --fivering NUM : to generate torsion angles for five-membered ring systems
             --sixring NUM : to generate torsion angles for six-membered ring systems
-            
-
-            --twopi : to convert torsion angles from [-180,180] (default) to [0,360]
             --rad : to convert torsion angles from degrees (default) to radians
-            
-
-            -h or --help to print this menu. 
+            --help or -h to print this menu. 
 ```
 
 #### Torsion angles
@@ -27,15 +22,13 @@ The flags `--peptide`, `--fivering` and `--sixring` are to be used with an `NUM`
  - `--fivering` `NUM` indicates the amount of evenly spaced values, with `NUM^2` being the amount of conformations to be sampled for
  - `--sixring` `NUM` indicates the (near) amount of conformations to be sampled for
 </br>
-</br>
-The flag `--twopi` is used to change the range of possible torsion angles from [-π, π] to [0, 2π].</br>
-The flag `--rad` is used to convert all torsion angles from degrees to radians.
+- `--rad` is used to convert all torsion angles from degrees to radians. Only works for `--peptide` and `--sixring`
 
 
 ### Example
 ``` 
-$ puckers --fivering 21 --rad
-$ puckers --peptide 37 --twopi 
+$ puckers --peptide 37 --rad 
+$ puckers --fivering 21 
 $ puckers --sixring 630 
 ```
 
