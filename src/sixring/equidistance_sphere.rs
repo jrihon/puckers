@@ -23,12 +23,12 @@
 // import modules
 use std::f64::consts::PI;
 
-use crate::torsion_typing::SphericalCoordinates;
+use crate::torsion_typing::SphericalAxes;
 
 pub const RHO : f64 = 0.67; // radius of the sphere; constant
 pub const TWOPI : f64 = 2. * PI; // two pi; constant
 
-pub fn equidistance_sphere(num : u64 ) -> SphericalCoordinates {
+pub fn equidistance_sphere(num : u64 ) -> SphericalAxes {
     // Set a value as surface area / points
     let corrected_num: f64 = corrected_amount_of_points(num as f64);
     let a: f64 = ( 4. * PI * RHO.powi(2)) / corrected_num;
@@ -47,7 +47,7 @@ pub fn equidistance_sphere(num : u64 ) -> SphericalCoordinates {
 
     let num_sizeof: usize = corrected_num_amount_to_size_up_arrays(m_theta, d_phi);
     // Instance struct
-    let mut globe = SphericalCoordinates::new(num_sizeof, m_theta as usize, RHO);
+    let mut globe = SphericalAxes::new(num_sizeof, m_theta as usize, RHO);
 
     for m in 0..m_theta as u32 {
         globe.theta[m as usize] = (PI * (m as f64 + 0.5)) / m_theta;

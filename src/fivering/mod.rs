@@ -3,7 +3,7 @@ use std::f64::consts::PI;
 use ndarray::Array1;
 
 use crate::arguments::Flags;
-use crate::torsion_typing::{Furanose, FurCoords, Dihedrals};
+use crate::torsion_typing::{Furanose, FuranoseAxes, Dihedrals};
 
 const FOURPIOVERFIVE : f64 = (4. * PI) / 5.;
 
@@ -21,7 +21,7 @@ const FOURPIOVERFIVE : f64 = (4. * PI) / 5.;
 pub fn fivering(flags : &Flags) -> Furanose {
     
     // Derive torsion angles from the given axes
-    let polars = FurCoords::new(flags.num as usize);
+    let polars = FuranoseAxes::new(flags.num as usize);
 
     // Setup variable
     let amount : u64 = flags.num * flags.num;

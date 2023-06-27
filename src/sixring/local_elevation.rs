@@ -33,14 +33,14 @@
 
 // imports
 use ndarray::Array2;
-use crate::torsion_typing::SphericalCoordinates;
+use crate::torsion_typing::SphericalAxes;
 use crate::sixring::equidistance_sphere::TWOPI as TWOPI;
 
 // CONSTANTS
 pub const Z_SIZE: usize = 6;
 
 #[allow(unused_assignments)]
-pub fn cremerpople_evelation(sphere : &SphericalCoordinates) -> Array2<f64> {
+pub fn cremerpople_evelation(sphere : &SphericalAxes) -> Array2<f64> {
     // spherical coordinates are by default in radians
 
     // 6 atomic elevations (Z_j) for any set of (r, theta, phi)
