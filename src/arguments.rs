@@ -56,16 +56,15 @@ impl Flags {
         let mut flag = Flags::new();
 
         let mut cli_iter = cli_args.iter();
-        let mut b: bool = true;
 
-        while b { // while the iterator produces valid Some(x) types
+        loop { // while the iterator produces valid Some(x) types
             
             match cli_iter.next() {  
                 Some(cli) => {
                     match &cli[..] { // from String to &str type
                         "--peptide" => {
                             if flag.torsion_type.is_none() {  // saveguard if two torsion types have been queried, only first one matters
-                                flag.define_torsion_type(TorsionType::Backbone, &mut cli_iter)
+                                flag.define_torsion_type(TorsionType::Peptide, &mut cli_iter)
                             }
                         },
                         "--fivering" => {
@@ -83,10 +82,11 @@ impl Flags {
                         _ => () // do nothing if not matching on anything
                         }
                     },
-                None => b = false // end of cli argument query
+                None => break // end of cli argument query
                 }
         }
 
+        if flag.torsion_type.is_none() { panic!("No `torsion type` queried... Aborting.")}
         flag
     }
     

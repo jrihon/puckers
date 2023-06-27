@@ -15,7 +15,7 @@ use geometry::dihedral;
 
 
 /// Calculate possible sampling space (spherical coordinates)
-pub fn sixring(flags: &Flags) -> Box<dyn Dihedrals> {
+pub fn sixring(flags: &Flags) -> Pyranose {
 
     let sphere = equidistance_sphere(flags.num);
 
@@ -38,5 +38,5 @@ pub fn sixring(flags: &Flags) -> Box<dyn Dihedrals> {
 
 
     // Dihedral function has values ORCA-ready
-    Box::new(p)
+    p
 }

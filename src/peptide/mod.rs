@@ -2,7 +2,7 @@ use crate::arguments::Flags;
 use crate::torsion_typing::{Peptide, BackboneCoordinates, Dihedrals};
 
 /// Generate the torsion angles to use as restraints for peptide-like molecules
-pub fn peptide(flags: &Flags) ->Box<dyn Dihedrals> {
+pub fn peptide(flags: &Flags) -> Peptide {
 
     let amount : u64 = flags.num * flags.num;
 
@@ -24,5 +24,5 @@ pub fn peptide(flags: &Flags) ->Box<dyn Dihedrals> {
     }
 
     // Values are ORCA-ready
-    Box::new(p)
+    p
 }

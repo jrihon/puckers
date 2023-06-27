@@ -39,29 +39,20 @@ use crate::torsion_typing::{TorsionType, Dihedrals};
 fn main() {
 
     // Disregard Clap, transcend humanity
-    let flags = Flags::return_cli_arguments(
-                                            args().collect()
-                                            );
+    let flags = Flags::return_cli_arguments( args().collect() ); // collect CLI arguments and parse I/O
 
-    // get the torsion angles
-//    let puckers = run(&flags);
-
-    // Print the results
-//    puckers.print_to_stdout(flags);
+    // get the torsion angles and print out
+    run(flags);
 }
 
 
 
-fn run(flags :&Flags) -> Box<dyn Dihedrals + 'static> {
+fn run(flags :Flags) -> () {
 
     // Match the type of torsion angles needed to generate and then output them
-    let t = match &flags.torsion_type {
-        Some(torsion) => match torsion {
-            TorsionType::Backbone =>  peptide::peptide(flags),
-            TorsionType::Fivering =>  fivering::fivering(flags),
-            TorsionType::Sixring =>  sixring:: sixring(flags),
-        },
-        None => panic!("Flag Not Found")
-    };
-    t
+    match &flags.torsion_type.as_ref().unwrap() { // `as_ref()` because we consume we otherwise consume the Enum when matching
+        TorsionType::Peptide =>  peptide::peptide(&flags).print_values(flags),
+        TorsionType::Fivering => fivering::fivering(&flags).print_values(flags),
+        TorsionType::Sixring =>  sixring::sixring(&flags).print_values(flags),
+    }
 }

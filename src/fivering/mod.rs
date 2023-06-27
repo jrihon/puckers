@@ -18,7 +18,7 @@ const FOURPIOVERFIVE : f64 = (4. * PI) / 5.;
 ///
 /// nu1 = ( (zx * 2cos(4pi/5)) + (zy * 2sin(4pi/5)) )/ 2
 /// nu3 = ( (zx * 2cos(4pi/5)) - (zy * 2sin(4pi/5)) )/ 2
-pub fn fivering(flags : &Flags) -> Box<dyn Dihedrals> {
+pub fn fivering(flags : &Flags) -> Furanose {
     
     // Derive torsion angles from the given axes
     let polars = FurCoords::new(flags.num as usize);
@@ -51,5 +51,5 @@ pub fn fivering(flags : &Flags) -> Box<dyn Dihedrals> {
     f.nu1 = f.nu1.iter().map(|x| if x < &0. { x + 360.} else {*x}).collect::<Array1<f64>>();
     f.nu3 = f.nu3.iter().map(|x| if x < &0. { x + 360.} else {*x}).collect::<Array1<f64>>();
 
-    Box::new(f)
+    f
 }
