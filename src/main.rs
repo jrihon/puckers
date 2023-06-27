@@ -1,4 +1,3 @@
-#![allow(unused)]
 /// A program, written in the greatest language of all, to generate dihedral values
 /// in order to perform conformational sampling on : 
 ///     peptide-like molecules (or any set of two torsion angles),
@@ -35,8 +34,7 @@ use crate::torsion_typing::{TorsionType, Dihedrals};
 ///
 ///
 /// ---------------- MAIN ---------------- 
-#[allow(unused_variables)]
-fn main() {
+fn main() -> () {
 
     // Disregard Clap, transcend humanity
     let flags = Flags::return_cli_arguments( args().collect() ); // collect CLI arguments and parse I/O
@@ -50,7 +48,7 @@ fn main() {
 fn run(flags :Flags) -> () {
 
     // Match the type of torsion angles needed to generate and then output them
-    match &flags.torsion_type.as_ref().unwrap() { // `as_ref()` because we consume we otherwise consume the Enum when matching
+    match flags.torsion_type.as_ref().unwrap() { // `as_ref()` because we consume we otherwise consume the Enum when matching
         TorsionType::Peptide =>  peptide::peptide(&flags).print_values(flags),
         TorsionType::Fivering => fivering::fivering(&flags).print_values(flags),
         TorsionType::Sixring =>  sixring::sixring(&flags).print_values(flags),

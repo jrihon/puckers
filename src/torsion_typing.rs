@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use std::f64::consts::PI;
 use ndarray::Array1;
 
@@ -7,7 +6,6 @@ use crate::sixring::equidistance_sphere::equidistance_sphere;
 
 const TO_RAD: f64 = PI / 180.;
 const TO_DEG: f64 = 180. / PI ;
-const TWOPI: f64 = 2. * PI;
 // Which torsion type is going to be calculated
 //#[derive(Debug, Clone)]
 #[derive(Debug)]
@@ -229,7 +227,7 @@ impl Dihedrals for Furanose {
     fn print_values(self, flags : Flags) {
         let amount: usize = flags.num as usize * flags.num as usize;
 
-        let mut axis = FuranoseAxes::new(flags.num as usize);
+        let axis = FuranoseAxes::new(flags.num as usize);
         let num_f64 : f64 = flags.num as f64;
 
 

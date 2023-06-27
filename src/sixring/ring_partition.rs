@@ -98,15 +98,6 @@ where
  SINbetapijk[i]= sqrt( 1- COSbetapijk[i]*COSbetapijk[i] );
 */
 
-//            TRYING SHIT
-//            let a = self.slice(s![i, ..Z_SIZE]);
-//                rpij_arr[[i,j]] = RIJSQ - ( a[j] - a[(j+1)/Z_SIZE] )
-//                //rpij_arr[[i,j]] = RIJSQ - ( self.get((i,j)).unwrap() - self.get((i, (j+1)/Z_SIZE)).unwrap() )
-//
-
-//        println!("{}", rpij_arr);
-//        println!("{}", cospb_arr);
-//        println!("{}", sinpb_arr);
         ProjectionPartition { 
             rpij: rpij_arr,
             cosbpijk: cospb_arr,

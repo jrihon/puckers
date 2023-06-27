@@ -8,7 +8,7 @@ mod ring_partition;
 use crate::sixring::equidistance_sphere::equidistance_sphere;
 
 use crate::arguments::Flags;
-use crate::torsion_typing::{Pyranose, Dihedrals};
+use crate::torsion_typing::Pyranose;
 use crate::sixring::ring_partition::RingPartition;
 
 use geometry::dihedral;

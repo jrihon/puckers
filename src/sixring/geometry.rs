@@ -1,4 +1,5 @@
-#![allow(dead_code)]
+#![allow(dead_code)] // -> standalone math functions are never used. Written and kept anyway
+                     // because I felt like having them not as methods too, just in case
 /// General Linear Algebra and math stuff I do not want to import from different libraries
 /// so I write it myself and this way I can implement them on primitives
 ///
@@ -157,9 +158,6 @@ pub fn subtract_arr(a : Coordinate, b : Coordinate) -> Coordinate {
 /// the Coordinate type, as we need to add three more Coordinate variables to the function
 /// arguments
 /// That is why it remains as a standalone public function
-/// TODO : This function needs excessive testing !
-/// TODO : Create mod test and test out several known sets of four points with known dihedrals !
-/// TODO : Do this before continuing to write other functions !
 ///
 pub fn dihedral(p0 : Coordinate, p1 : Coordinate, p2 : Coordinate, p3 : Coordinate) -> f64 {
     let b0 = p0.subtract_arr(&p1);

@@ -39,7 +39,6 @@ use crate::sixring::equidistance_sphere::TWOPI as TWOPI;
 // CONSTANTS
 pub const Z_SIZE: usize = 6;
 
-#[allow(unused_assignments)]
 pub fn cremerpople_evelation(sphere : &SphericalAxes) -> Array2<f64> {
     // spherical coordinates are by default in radians
 
@@ -98,6 +97,8 @@ fn constant_from_term2() -> [f64;6] {
     [0,1,2,3,4,5].map(|j| (-1_f64).powi(j))
 }
 
+/// Testing various ways to make a vector of constant values
+/// NOTE: I was still learning back then
 #[cfg(test)]
 mod test {
 
@@ -114,13 +115,13 @@ mod test {
         // Manual method
         let mut vec2: Vec<f64> = Vec::with_capacity(Z_SIZE);
 
-        // Array method
-        let vec3 : [f64;6] = [0.,1.,2.,3.,4.,5.].map(|j| ((TWOPI * j) / 3.));
-
         for j in 0..6  {
             vec2.push((TWOPI * j as f64) / 3.)
         };
         
+        // Array method
+        let vec3 : [f64;6] = [0.,1.,2.,3.,4.,5.].map(|j| ((TWOPI * j) / 3.));
+
         assert_eq!(vec1.iter().sum::<f64>(), vec2.iter().sum());
         assert_eq!(vec2.iter().sum::<f64>(), vec3.iter().sum());
     }
@@ -128,7 +129,7 @@ mod test {
     #[test]
     fn test_iterating_over_array2() {
 
-        // Rust method
+        // Rust Vector method
         let vec1 = vec![0,1,2,3,4,5].into_iter()
                                .map(|j| (-1_f64).powi(j))
                                .collect::<Vec<f64>>();
@@ -139,6 +140,7 @@ mod test {
             vec2.push((-1_f64).powi(j))
         }
 
+        // Rust Array method
         let vec3: [f64;6] = [0,1,2,3,4,5].map(|j| (-1_f64).powi(j));
 
         assert_eq!(vec1.iter().sum::<f64>(), vec2.iter().sum());

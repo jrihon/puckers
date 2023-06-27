@@ -3,7 +3,7 @@ use std::f64::consts::PI;
 use ndarray::Array1;
 
 use crate::arguments::Flags;
-use crate::torsion_typing::{Furanose, FuranoseAxes, Dihedrals};
+use crate::torsion_typing::{Furanose, FuranoseAxes};
 
 const FOURPIOVERFIVE : f64 = (4. * PI) / 5.;
 

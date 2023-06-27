@@ -18,8 +18,8 @@ use crate::sixring::geometry::{Coordinate,
 /// Then, reconstruct_coordinates() returns a Vec<SixRingAtoms>
 ///
 
-// fields s11, s25 and s31 are never read
-#[allow(dead_code)]
+
+#[allow(dead_code)] // -> fields s11, s25 and s31 are never read. Included for declarative purposes
 #[derive(Debug)]
 struct PointPositions {
     s11 : Coordinate,
@@ -75,7 +75,6 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
 
     for i in 0..sphere_size {
 
-//        println!("{}, {}, {}", proj.op[i], proj.qp[i], proj.oq[i]);
 
         // Add the local evelation already as the z-coordinate to the final molecule's array
         let mut sixring = SixRingAtoms {
@@ -145,7 +144,6 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         let rho1 = pyranose.s13[1].atan2(pyranose.s13[0]);
         let rho2 = pyranose.s23[1].atan2(pyranose.s23[0] - proj.oq[i]);
         let rho3 = pyranose.s35[1].atan2(pyranose.s35[0]);
-//        println!("{} {} {}", rho1, rho2, rho3); // here everything is fine
 
         //	pO[0] = 0.;	pO[1] = 0.;
         //	pP[0] = (OP*OP+OQ*OQ-QP*QP)/(2.*OQ);
@@ -167,9 +165,6 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
                                 0.,
                                 0.]; //pQ
 
-//        println!("{:?}", p_o); 
-//        println!("{:?}", p_p); 
-//        println!("{:?}", p_q); 
 //      rhoPS1 = atan2(pP[1],pP[0]);
 //	    rhoPS2 = atan2(pP[1],pP[0]-OQ);
         let rho_ps1 = p_p[1].atan2(p_p[0]);
@@ -178,7 +173,6 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         let sigma1 = rho1 - rho_ps1;
         let sigma2 = rho_ps2 - rho2;
         let sigma3 = rho3;
-//        println!("{} {} {}", sigma1, sigma2, sigma3); //sigma3 is correct, the rest is not
 
         // p1, p3, p5 already exist on the xy'-plane, so need only to rotate p2,p4,p6
         let tmp_sixring = SixRingAtoms {
@@ -212,7 +206,6 @@ pub fn reconstruct_coordinates(proj : &ProjectionPartition, sphere_size : usize,
         sixring.p6[1] = rot4.apply_rotation_around_g(subtract_arr(tmp_sixring.p6, p_g), 1);
 
 
-//        println!("{:?}", sixring);
         pyranosecoordinates.push(sixring);
     }
 

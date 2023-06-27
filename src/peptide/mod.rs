@@ -1,5 +1,5 @@
 use crate::arguments::Flags;
-use crate::torsion_typing::{Peptide, PeptideAxes, Dihedrals};
+use crate::torsion_typing::{Peptide, PeptideAxes};
 
 /// Generate the torsion angles to use as restraints for peptide-like molecules
 pub fn peptide(flags: &Flags) -> Peptide {
