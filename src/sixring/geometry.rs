@@ -1,5 +1,3 @@
-#![allow(dead_code)] // -> standalone math functions are never used. Written and kept anyway
-                     // because I felt like having them not as methods too, just in case
 /// General Linear Algebra and math stuff I do not want to import from different libraries
 /// so I write it myself and this way I can implement them on primitives
 ///
@@ -102,11 +100,13 @@ impl LinAlg for Coordinate {
 ///
 /// Provide standard linear algebra operations also as
 /// standalone function
+#[allow(dead_code)]
 pub fn dot_product(a : Coordinate, b : Coordinate) -> f64 {
     (a[0] * b[0]) + (a[1] * b[1]) + (a[2] * b[2])
 
 }
 
+#[allow(dead_code)]
 pub fn cross_product(a : Coordinate, b : Coordinate) -> DirectionAxis {
 
     [
@@ -119,6 +119,7 @@ pub fn cross_product(a : Coordinate, b : Coordinate) -> DirectionAxis {
 
 /// -> sqrt(x² + y² + z²)
 /// This gives the length of the vector
+#[allow(dead_code)]
 fn norm(c : &Coordinate) -> f64 {
     c.map(|x: f64| x.powi(2))
         .into_iter()
@@ -127,6 +128,7 @@ fn norm(c : &Coordinate) -> f64 {
 }
 
 /// Normalise the vector, often used as a directional axis
+#[allow(dead_code)]
 pub fn normalise_vector(c : Coordinate) -> Coordinate {
     let d = 1. / norm(&c); 
 

@@ -9,11 +9,11 @@ A program to generate dihedral values in order to perform conformational samplin
 
 ```
 Pucke.rs help menu :
-            --peptide NUM : to generate torsion angles for peptide-like systems
+            --peptide  NUM : to generate torsion angles for peptide-like systems
             --fivering NUM : to generate torsion angles for five-membered ring systems
-            --sixring NUM : to generate torsion angles for six-membered ring systems
-            --rad : to convert torsion angles from degrees (default) to radians
-            --help (or -h) to print this menu. 
+            --sixring  NUM : to generate torsion angles for six-membered ring systems
+            --rad          : to convert torsion angles from degrees (default) to radians
+            -h or --help   : to print this menu. "
 ```
 
 #### Torsion angles
