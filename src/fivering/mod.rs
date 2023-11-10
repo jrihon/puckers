@@ -28,8 +28,8 @@ pub fn fivering(flags : &Flags) -> Furanose {
     let num_f64 : f64 = flags.num as f64;
 
     // Initialise equation-specific constants
-    let denominator_x : f64 = 2. * FOURPIOVERFIVE.cos();
-    let denominator_y : f64 = 2. * FOURPIOVERFIVE.sin();
+    let denominator_x : f64 = FOURPIOVERFIVE.cos();
+    let denominator_y : f64 = FOURPIOVERFIVE.sin();
 
     // Instance Furanose struct
     let mut f = Furanose::new(amount as usize);
@@ -43,8 +43,8 @@ pub fn fivering(flags : &Flags) -> Furanose {
         y = i as f64 % num_f64; // Y axis, return with modulo
 
         // fill out the array
-        f.nu1[i] = (( polars.zx[x as usize] * denominator_x ) + ( polars.zy[y as usize] * denominator_y)) / 2.;
-        f.nu3[i] = (( polars.zx[x as usize] * denominator_x ) - ( polars.zy[y as usize] * denominator_y)) / 2.;
+        f.nu1[i] = ( polars.zx[x as usize] * denominator_x ) + ( polars.zy[y as usize] * denominator_y);
+        f.nu3[i] = ( polars.zx[x as usize] * denominator_x ) - ( polars.zy[y as usize] * denominator_y);
     }
 
     // Make values ORCA-ready
