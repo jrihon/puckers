@@ -1,11 +1,11 @@
-use std::f64::consts::PI;
+//use std::f64::consts::PI;
 use ndarray::Array1;
 
 use crate::arguments::Flags;
 use crate::sixring::equidistance_sphere::equidistance_sphere;
 
-const TO_RAD: f64 = PI / 180.;
-const TO_DEG: f64 = 180. / PI ;
+//const TO_RAD: f64 = PI / 180.;
+//const TO_DEG: f64 = 180. / PI ;
 // Which torsion type is going to be calculated
 //#[derive(Debug, Clone)]
 #[derive(Debug)]
@@ -187,14 +187,15 @@ impl Dihedrals for Peptide {
 
     fn print_values(self, flags : Flags) {
 
-        let mut axis = PeptideAxes::new(flags.num as usize);
+//        let mut axis = PeptideAxes::new(flags.num as usize);
+        let axis = PeptideAxes::new(flags.num as usize);
 
-        // if we want to print to radians instead of degrees
-        if flags.rad {
-            axis.x = axis.x.iter().map(|x| x * TO_RAD).collect::<Array1<f64>>();
-            axis.y = axis.y.iter().map(|y| y * TO_RAD).collect::<Array1<f64>>();
-        };
-
+//        // if we want to print to radians instead of degrees
+//        if flags.rad {
+//            axis.x = axis.x.iter().map(|x| x * TO_RAD).collect::<Array1<f64>>();
+//            axis.y = axis.y.iter().map(|y| y * TO_RAD).collect::<Array1<f64>>();
+//        };
+//
         let amount: usize = flags.num as usize * flags.num as usize;
         let num_f64 = flags.num as f64;
         let mut x : f64;
@@ -259,12 +260,13 @@ impl Dihedrals for Furanose {
 impl Dihedrals for Pyranose {
     fn print_values(self, flags : Flags) {
 
-        let mut axis = equidistance_sphere(flags.num);
+//        let mut axis = equidistance_sphere(flags.num);
+        let axis = equidistance_sphere(flags.num);
         // if the --rad flags was not prompted, since we already have the accessed as spherical coordinates
-        if !flags.rad {
-            axis.theta = axis.theta.iter().map(|theta| theta * TO_DEG).collect::<Array1<f64>>();
-            axis.phi = axis.phi.iter().map(|phi| phi * TO_DEG).collect::<Array1<f64>>();
-        };
+//        if !flags.rad {
+//            axis.theta = axis.theta.iter().map(|theta| theta * TO_DEG).collect::<Array1<f64>>();
+//            axis.phi = axis.phi.iter().map(|phi| phi * TO_DEG).collect::<Array1<f64>>();
+//        };
 
         println!("{} {} {} {} {} {}", // header
                  "#   ALPHA1",

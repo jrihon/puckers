@@ -8,7 +8,7 @@ use crate::torsion_typing::TorsionType; // enum
 pub struct Flags {
     pub torsion_type : Option<TorsionType>, // Option, since user might not query this always 
     pub num : u64,
-    pub rad : bool,
+//    pub rad : bool,
 }
 
 
@@ -18,14 +18,14 @@ impl Flags {
     /// ```
     /// Flags {
     ///     torsion_type : None,
-    ///     rad : false,
+//    ///     rad : false,
     ///     num : 0
     /// }
     /// ```
     fn new() -> Flags{ 
         Flags {
             torsion_type : None,
-            rad : false,
+//            rad : false,
             num : 0
         }
     }
@@ -77,7 +77,7 @@ impl Flags {
                                 flag.define_torsion_type(TorsionType::Sixring, &mut cli_iter)
                             }
                         },
-                        "--rad" => flag.rad = true,
+//                        "--rad" => flag.rad = true,
                         "-h" | "--help" => print_help() , // Help message
                         _ => () // do nothing if not matching on anything
                         }
@@ -100,7 +100,6 @@ fn print_help() {
        --peptide  NUM : to generate torsion angles for peptide-like systems
        --fivering NUM : to generate torsion angles for five-membered ring systems
        --sixring  NUM : to generate torsion angles for six-membered ring systems
-       --rad          : to convert torsion angles from degrees (default) to radians
        -h or --help   : to print this menu. "
         );
         exit(0)
