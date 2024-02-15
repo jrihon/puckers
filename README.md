@@ -53,3 +53,5 @@ $ cd path/to/puckers
 # Install using the Rust's package manager
 $ cargo install --path . --release
 ```
+## Author
+Written and designed by [Jérôme Rihon](https://github.com/jrihon/jrihon)
