@@ -1,11 +1,17 @@
 [package]
 name = "puckers"
-version = "0.2.0"
+description = "Generate axes for conformational sampling of molecules"
+authors = ["Jérôme Rihon <jeromerihon@gmail.com>"]
+version = "0.8.0"
+readme = "README.md" 
+repository = "https://github.com/jrihon/puckers"
+homepage = "https://github.com/jrihon/puckers"
 edition = "2021"
+rust-version = "1.79"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nalgebra = "0.31.3"
+nalgebra = "0.32.6"
 ndarray = "0.15.6"
 assert_float_eq = "1"

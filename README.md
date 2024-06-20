@@ -48,7 +48,7 @@ Install pucke.rs
 $ git clone https://github.com/jrihon/puckers.git
 
 # Go to the directory where the repository is installed on your system
-$ cd path/to/puckers
+$ cd puckers
 
 # Install using the Rust's package manager
 $ cargo install --path . --release
