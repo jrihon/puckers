@@ -3,6 +3,12 @@
 version = 3
 
 [[package]]
+name = "anyhow"
+version = "1.0.93"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c95c10ba0b00a02636238b814946408b1322d5ac4760326e6fb8ec956d85775"
+
+[[package]]
 name = "approx"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -28,6 +34,25 @@ name = "bytemuck"
 version = "1.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aaa3a8d9a1ca92e282c96a32d6511b695d7d994d1d102ba85d279f9b2756947f"
+
+[[package]]
+name = "calm_io"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ea0608700fe42d90ec17ad0f86335cf229b67df2e34e7f463e8241ce7b8fa5f"
+dependencies = [
+ "calmio_filters",
+]
+
+[[package]]
+name = "calmio_filters"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "846501f4575cd66766a40bb7ab6d8e960adc7eb49f753c8232bd8e0e09cf6ca2"
+dependencies = [
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "matrixmultiply"
@@ -136,7 +161,9 @@ dependencies = [
 name = "puckers"
 version = "0.8.0"
 dependencies = [
+ "anyhow",
  "assert_float_eq",
+ "calm_io",
  "nalgebra",
  "ndarray",
 ]

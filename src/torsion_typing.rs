@@ -4,6 +4,9 @@ use ndarray::Array1;
 use crate::arguments::Flags;
 use crate::sixring::equidistance_sphere::equidistance_sphere;
 
+use anyhow::Result;
+use calm_io::stdoutln;
+
 //const TO_RAD: f64 = PI / 180.;
 //const TO_DEG: f64 = 180. / PI ;
 // Which torsion type is going to be calculated
@@ -178,24 +181,17 @@ pub trait Dihedrals {
 
     /// A `#` pound symbol is added by on the first line, to act as a comment symbol 
     /// for when one wants to easily parse it through numpy, shell scripts or as an easy identifier.
-    fn print_values(self, flags : Flags);
+    fn print_values(self, flags : Flags) -> Result<()>;
 }
 
 
 
 impl Dihedrals for Peptide {
 
-    fn print_values(self, flags : Flags) {
+    fn print_values(self, flags : Flags) -> Result<()> {
 
-//        let mut axis = PeptideAxes::new(flags.num as usize);
         let axis = PeptideAxes::new(flags.num as usize);
 
-//        // if we want to print to radians instead of degrees
-//        if flags.rad {
-//            axis.x = axis.x.iter().map(|x| x * TO_RAD).collect::<Array1<f64>>();
-//            axis.y = axis.y.iter().map(|y| y * TO_RAD).collect::<Array1<f64>>();
-//        };
-//
         let amount: usize = flags.num as usize * flags.num as usize;
         let num_f64 = flags.num as f64;
         let mut x : f64;
@@ -213,25 +209,35 @@ impl Dihedrals for Peptide {
             x = (i as f64 / num_f64).floor(); 
             y = i as f64 % num_f64; 
 
-            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+            match stdoutln!(
+            "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
                      self.phi[i],
                      self.psi[i],
                      axis.x[x as usize],
                      axis.y[y as usize],
-                     width=10, precision=3)
-            }
+                     width=10, precision=3
+                ) {
+                    Ok(_)  => Ok(()),
+                    Err(e) => match e.kind() {
+                        std::io::ErrorKind::BrokenPipe => Ok(()),
+                        _ => Err(e)
+                    },
+                }?;
+        }
+
+        Ok(())
     }
 
 }
 impl Dihedrals for Furanose {
 
-    fn print_values(self, flags : Flags) {
+    fn print_values(self, flags : Flags) -> Result<()> {
         let amount: usize = flags.num as usize * flags.num as usize;
 
         let axis = FuranoseAxes::new(flags.num as usize);
         let num_f64 : f64 = flags.num as f64;
 
-
+//        " #      NU1 NU3 Zx Zy "
         println!("{} {} {} {}", // header
                  "#      NU1",
                  "       NU3",
@@ -247,26 +253,31 @@ impl Dihedrals for Furanose {
             x = (i as f64 / num_f64).floor();
             y = i as f64 % num_f64; 
 
-            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+
+            // https://github.com/Misterio77/flavours/commit/d958a604911b4a317e517c55e9cbc164e1d916fa#diff-adb9374a6a670def766e5e7c0118fd4132963182bc14e505950bf710c4ae47daR33
+            match stdoutln!(
+                "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
                      self.nu1[i],
                      self.nu3[i],
                      axis.zx[x as usize],
                      axis.zy[y as usize],
-                     width=10, precision=3)
+                     width=10, precision=3
+                ) {
+                    Ok(_)  => Ok(()),
+                    Err(e) => match e.kind() {
+                        std::io::ErrorKind::BrokenPipe => Ok(()),
+                        _ => Err(e)
+                    },
+                }?;
         }
+        Ok(())
     }
 }
 
 impl Dihedrals for Pyranose {
-    fn print_values(self, flags : Flags) {
+    fn print_values(self, flags : Flags)  -> Result<()> {
 
-//        let mut axis = equidistance_sphere(flags.num);
         let axis = equidistance_sphere(flags.num);
-        // if the --rad flags was not prompted, since we already have the accessed as spherical coordinates
-//        if !flags.rad {
-//            axis.theta = axis.theta.iter().map(|theta| theta * TO_DEG).collect::<Array1<f64>>();
-//            axis.phi = axis.phi.iter().map(|phi| phi * TO_DEG).collect::<Array1<f64>>();
-//        };
 
         println!("{} {} {} {} {} {}", // header
                  "#   ALPHA1",
@@ -282,14 +293,23 @@ impl Dihedrals for Pyranose {
         for i in 0..axis.amount {
             if (axis.phi[i] == 0.0) && i != 0 { it += 1 }
 
-            println!("{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+            match stdoutln!(
+            "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
                      self.alpha1[i],
                      self.alpha2[i],
                      self.alpha3[i], 
                      axis.rho,
                      axis.theta[it],
                      axis.phi[i],
-                     width=10, precision=3)
+                     width=10, precision=3
+                ) {
+                    Ok(_)  => Ok(()),
+                    Err(e) => match e.kind() {
+                        std::io::ErrorKind::BrokenPipe => Ok(()),
+                        _ => Err(e)
+                    },
+                }?;
         }
+        Ok(())
     }
 }
