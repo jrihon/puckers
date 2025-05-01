@@ -23,8 +23,8 @@ repos:
 -   repo: https://github.com/doublify/pre-commit-rust
     rev: master
     hooks:
-    -   id: fmt
     -   id: cargo-check
+        args:
 ```
 
 
