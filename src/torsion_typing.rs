@@ -41,65 +41,58 @@ pub enum TorsionType {
 /// public `phi` field : Array1<f64>
 /// public `psi` field : Array1<f64>
 pub struct Peptide {
-    pub phi : Array1<f64>,
-    pub psi : Array1<f64>,
+    pub phi: Array1<f64>,
+    pub psi: Array1<f64>,
 }
 
 impl Peptide {
     /// Initialise the struct with an array of zeroes
-    pub fn new(amount : usize) -> Peptide {
+    pub fn new(amount: usize) -> Peptide {
         Peptide {
-            phi : Array1::zeros(amount),
-            psi : Array1::zeros(amount),
+            phi: Array1::zeros(amount),
+            psi: Array1::zeros(amount),
         }
     }
 }
-
-
 
 /// the `nu` dihedrals, according to the IUPAC nomenclature convention
 /// public `nu1` field : Array1<f64>
 /// public `nu3` field : Array1<f64>
 pub struct Furanose {
-    pub nu1 : Array1<f64>,
-    pub nu3 : Array1<f64>,
+    pub nu1: Array1<f64>,
+    pub nu3: Array1<f64>,
 }
 
 impl Furanose {
     /// Initialise the struct with an array of zeroes
-    pub fn new(amount : usize) -> Furanose {
+    pub fn new(amount: usize) -> Furanose {
         Furanose {
-            nu1 : Array1::zeros(amount),
-            nu3 : Array1::zeros(amount),
+            nu1: Array1::zeros(amount),
+            nu3: Array1::zeros(amount),
         }
     }
 }
-
-
-
 
 /// the `alpha` dihedrals according to the Strauss-Piccket (SP) pyranose puckering formalism
 /// public `alpha1` field : Array1<f64>
 /// public `alpha2` field : Array1<f64>
 /// public `alpha3` field : Array1<f64>
 pub struct Pyranose {
-    pub alpha1 : Array1<f64>,
-    pub alpha2 : Array1<f64>,
-    pub alpha3 : Array1<f64>,
+    pub alpha1: Array1<f64>,
+    pub alpha2: Array1<f64>,
+    pub alpha3: Array1<f64>,
 }
 
 impl Pyranose {
     /// Initialise the struct with an array of zeroes
-    pub fn new(sphere_size : usize) -> Pyranose {
-         Pyranose {
-            alpha1 : Array1::zeros(sphere_size),
-            alpha2 : Array1::zeros(sphere_size),
-            alpha3 : Array1::zeros(sphere_size),
-        }       
+    pub fn new(sphere_size: usize) -> Pyranose {
+        Pyranose {
+            alpha1: Array1::zeros(sphere_size),
+            alpha2: Array1::zeros(sphere_size),
+            alpha3: Array1::zeros(sphere_size),
+        }
     }
 }
-
-
 
 //-------------
 //
@@ -107,15 +100,14 @@ impl Pyranose {
 //
 //-------------
 //
-/// The axes to iterate over for peptide-like molecules : 
+/// The axes to iterate over for peptide-like molecules :
 /// Its extent is : [0 , 2pi] (rad)
 /// Its extent is : [0 , 360] (degrees)
 /// public `x` field : Array1<f64>
 /// public `y` field : Array1<f64>
 pub struct PeptideAxes {
-    pub x : Array1<f64>,
-    pub y : Array1<f64>,
-
+    pub x: Array1<f64>,
+    pub y: Array1<f64>,
 }
 
 impl PeptideAxes {
@@ -128,14 +120,13 @@ impl PeptideAxes {
     }
 }
 
-/// The axes to iterate over for fivering molecules : 
+/// The axes to iterate over for fivering molecules :
 /// Its extent is : [-60, 60]
 /// public `zx` field : Array1<f64>
 /// public `zy` field : Array1<f64>
 pub struct FuranoseAxes {
-    pub zx : Array1<f64>,
-    pub zy : Array1<f64>,
-
+    pub zx: Array1<f64>,
+    pub zy: Array1<f64>,
 }
 
 impl FuranoseAxes {
@@ -145,72 +136,61 @@ impl FuranoseAxes {
             zx: Array1::linspace(-60., 60., num),
             zy: Array1::linspace(-60., 60., num),
         }
-        
     }
-    
 }
 
-
-/// The axes to iterate over for sixring molecules : 
+/// The axes to iterate over for sixring molecules :
 /// public `rho` field : f64 . Standard value of 0.67
 /// public `theta` field : Array1<f64>. [0, pi] or [0, 180]
 /// public `phi` field : Array1<f64>. [0, 2pi] or [0, 360]
 /// public `amount` field : Array1<f64>. The corrected amount of points to sample
 pub struct SphericalAxes {
-    pub rho : f64,
-    pub theta : Array1<f64>,
-    pub phi : Array1<f64>,
-    pub amount : usize,
+    pub rho: f64,
+    pub theta: Array1<f64>,
+    pub phi: Array1<f64>,
+    pub amount: usize,
 }
 
-
 impl SphericalAxes {
-    pub fn new(amount: usize, m_theta : usize, rho: f64) -> SphericalAxes {
+    pub fn new(amount: usize, m_theta: usize, rho: f64) -> SphericalAxes {
         SphericalAxes {
-            rho, // shorthand initialisation
-            theta : Array1::<f64>::zeros(m_theta),
-            phi : Array1::<f64>::zeros(amount),
-            amount // shorthand initialisation
+            rho,
+            theta: Array1::<f64>::zeros(m_theta),
+            phi: Array1::<f64>::zeros(amount),
+            amount,
         }
     }
 }
 
-/// We implement the print to output method signature on Dihedrals, 
+/// We implement the print to output method signature on Dihedrals,
 /// which will be implemented on Peptide, Furanose and Pyranose
 pub trait Dihedrals {
-
-    /// A `#` pound symbol is added by on the first line, to act as a comment symbol 
+    /// A `#` pound symbol is added by on the first line, to act as a comment symbol
     /// for when one wants to easily parse it through numpy, shell scripts or as an easy identifier.
-    fn print_values(self, flags : Flags) -> Result<()>;
+    fn print_values(self, flags: Flags) -> Result<()>;
 }
 
-
-
 impl Dihedrals for Peptide {
-
-    fn print_values(self, flags : Flags) -> Result<()> {
-
+    fn print_values(self, flags: Flags) -> Result<()> {
         let axis = PeptideAxes::new(flags.num as usize);
 
         let amount: usize = flags.num as usize * flags.num as usize;
         let num_f64 = flags.num as f64;
-        let mut x : f64;
-        let mut y : f64;
+        let mut x: f64;
+        let mut y: f64;
 
-        println!("{} {} {} {}", // header
-                 "#      PHI",
-                 "       PSI",
-                 "         X",
-                 "         Y"
-                 );
+        // header of output
+        println!(
+            "{} {} {} {}",
+            "#      PHI", "       PSI", "         X", "         Y"
+        );
 
         for i in 0..amount {
-
-            x = (i as f64 / num_f64).floor(); 
-            y = i as f64 % num_f64; 
+            x = (i as f64 / num_f64).floor();
+            y = i as f64 % num_f64;
 
             match stdoutln!(
-            "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
                      self.phi[i],
                      self.psi[i],
                      axis.x[x as usize],
@@ -220,39 +200,33 @@ impl Dihedrals for Peptide {
                     Ok(_)  => Ok(()),
                     Err(e) => match e.kind() {
                         std::io::ErrorKind::BrokenPipe => Ok(()),
-                        _ => Err(e)
+                        _ => Err(e),
                     },
-                }?;
+            }?;
         }
 
         Ok(())
     }
-
 }
 impl Dihedrals for Furanose {
-
-    fn print_values(self, flags : Flags) -> Result<()> {
+    fn print_values(self, flags: Flags) -> Result<()> {
         let amount: usize = flags.num as usize * flags.num as usize;
 
         let axis = FuranoseAxes::new(flags.num as usize);
-        let num_f64 : f64 = flags.num as f64;
+        let num_f64: f64 = flags.num as f64;
 
-//        " #      NU1 NU3 Zx Zy "
-        println!("{} {} {} {}", // header
-                 "#      NU1",
-                 "       NU3",
-                 "        Zx",
-                 "        Zy"
-                 );
+        // header of output
+        println!(
+            "{} {} {} {}",
+            "#      NU1", "       NU3", "        Zx", "        Zy"
+        );
 
-        let mut x : f64;
-        let mut y : f64;
+        let mut x: f64;
+        let mut y: f64;
 
         for i in 0..amount {
-
             x = (i as f64 / num_f64).floor();
-            y = i as f64 % num_f64; 
-
+            y = i as f64 % num_f64;
 
             // https://github.com/Misterio77/flavours/commit/d958a604911b4a317e517c55e9cbc164e1d916fa#diff-adb9374a6a670def766e5e7c0118fd4132963182bc14e505950bf710c4ae47daR33
             match stdoutln!(
@@ -268,47 +242,45 @@ impl Dihedrals for Furanose {
                         std::io::ErrorKind::BrokenPipe => Ok(()),
                         _ => Err(e)
                     },
-                }?;
+            }?;
         }
         Ok(())
     }
 }
 
 impl Dihedrals for Pyranose {
-    fn print_values(self, flags : Flags)  -> Result<()> {
-
+    fn print_values(self, flags: Flags) -> Result<()> {
         let axis = equidistance_sphere(flags.num);
 
-        println!("{} {} {} {} {} {}", // header
-                 "#   ALPHA1",
-                 "    ALPHA2",
-                 "    ALPHA3",
-                 "       RHO",
-                 "     THETA",
-                 "       PHI",
-                 );
+        // header of output
+        println!(
+            "{} {} {} {} {} {}",
+            "#   ALPHA1", "    ALPHA2", "    ALPHA3", "       RHO", "     THETA", "       PHI",
+        );
 
         let mut it: usize = 0; // iterate over the theta array
 
         for i in 0..axis.amount {
-            if (axis.phi[i] == 0.0) && i != 0 { it += 1 }
+            if (axis.phi[i] == 0.0) && i != 0 {
+                it += 1
+            }
 
             match stdoutln!(
-            "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
-                     self.alpha1[i],
-                     self.alpha2[i],
-                     self.alpha3[i], 
-                     axis.rho,
-                     axis.theta[it],
-                     axis.phi[i],
-                     width=10, precision=3
+                "{:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$} {:width$.precision$}",
+                         self.alpha1[i],
+                         self.alpha2[i],
+                         self.alpha3[i],
+                         axis.rho,
+                         axis.theta[it],
+                         axis.phi[i],
+                         width=10, precision=3
                 ) {
                     Ok(_)  => Ok(()),
                     Err(e) => match e.kind() {
                         std::io::ErrorKind::BrokenPipe => Ok(()),
                         _ => Err(e)
                     },
-                }?;
+            }?;
         }
         Ok(())
     }

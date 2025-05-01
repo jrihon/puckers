@@ -7,6 +7,12 @@ Install pre-commit as a hook to run checks on `git commit`.
 pip install pre-commit
 ```
 
+Requires `rustfmt` to run the hook.
+```
+rustup component add rustfmt
+```
+
+
 ## Usage
 
 Add the following file to the `root` of the project :

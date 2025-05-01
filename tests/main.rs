@@ -1,6 +1,4 @@
-
-fn main() {
-
+//fn main() {
 //    use std::f64::consts::PI;
 //
 //    const TWOPI: f64 = 2. * PI;
@@ -36,7 +34,7 @@ fn main() {
 //    let vec1: Vec<f64> = vec![0.,1.,2.,3.,4.,5.].into_iter()
 //                           .map(|j| (-1_f64).powf(j))
 //                           .collect::<Vec<f64>>();
-//                           
+//
 //    // Manual method
 //    let mut vec2: Vec<f64> = Vec::with_capacity(6);
 //    for j in 0..6  {
@@ -57,5 +55,4 @@ fn main() {
 //    ];
 //
 //    println!("{:?}", c[1][0]);
-
-}
+//}
