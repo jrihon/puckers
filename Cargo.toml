@@ -2,8 +2,8 @@
 name = "puckers"
 description = "Generate axes for conformational sampling of molecules"
 authors = ["Jérôme Rihon <jeromerihon@gmail.com>"]
-version = "0.8.0"
-readme = "README.md" 
+version = "0.9.0"
+readme = "README.md"
 repository = "https://github.com/jrihon/puckers"
 homepage = "https://github.com/jrihon/puckers"
 edition = "2021"
