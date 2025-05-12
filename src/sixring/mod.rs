@@ -1,6 +1,6 @@
 // import module(sixring) modules
 pub mod equidistance_sphere;
-mod geometry;
+pub mod geometry;
 mod local_elevation;
 mod reconstruct_ring;
 mod ring_partition;
