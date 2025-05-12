@@ -17,7 +17,7 @@ impl Flags {
     ///     num : 0
     /// }
     /// ```
-    fn new() -> Flags {
+    pub fn new() -> Flags {
         Flags {
             torsion_type: None,
             num: 0,
